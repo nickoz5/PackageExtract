@@ -1,0 +1,22 @@
+#!/bin/sh
+# Copyright (c) 2000-2015 Synology Inc. All rights reserved.
+
+include /env.mak
+
+case ${MakeClean} in
+	[Yy][Ee][Ss])
+	make clean
+	;;
+esac
+
+NCURSES_INCS="`pkg-config ncurses --cflags`"
+NCURSES_LIBS="`pkg-config ncurses --libs`"
+CFLAGS+="${CFLAGS} ${NCURSES_INCS}"
+LDFLAGS+="${LDFLAGS} ${NCURSES_LIBS}"
+
+env CC="${CC}" AR=${AR} CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" \
+#./configure ${ConfigOpt}
+
+make ${MAKE_FLAGS}
+
+

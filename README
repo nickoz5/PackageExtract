@@ -1,0 +1,17 @@
+Installation instructions
+-------------------------
+
+Open the settings.json configuration file at: /usr/syno/etc/packages/DownloadStation/download/settings.json
+
+modify: 'script-torrent-done-filename' to execute the 'extracter_transmission.sh' script
+modify: 'script-torrent-done-enabled' to true
+
+To restart transmission daemon: 
+
+/volume1/@appstore/DownloadStation/scripts/S25download.sh stop
+/volume1/@appstore/DownloadStation/scripts/S25download.sh start
+
+The following page gives information about "apparmor":
+http://forum.synology.com/enu/viewtopic.php?f=38&t=102092
+
+
