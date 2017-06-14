@@ -1,9 +1,15 @@
+Building
+--------
+
+Use the Synology diskstation environment to compile.
+
+
 Installation instructions
 -------------------------
 
 Open the settings.json configuration file at: /usr/syno/etc/packages/DownloadStation/download/settings.json
 
-modify: 'script-torrent-done-filename' to execute the 'extracter_transmission.sh' script
+modify: 'script-torrent-done-filename' to execute the 'pkgext_transmission.sh' script
 modify: 'script-torrent-done-enabled' to true
 
 To restart transmission daemon: 

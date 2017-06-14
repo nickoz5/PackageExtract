@@ -7,5 +7,5 @@
 #echo id: $TR_TORRENT_ID >> /root/started
 #echo name: $TR_TORRENT_NAME >> /root/started
 
-/opt/sbin/extracter -p "$TR_TORRENT_DIR/$TR_TORRENT_NAME"
+/opt/sbin/pkgext -p "$TR_TORRENT_DIR/$TR_TORRENT_NAME"
 

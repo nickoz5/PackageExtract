@@ -1,6 +1,5 @@
 bin/
 obj/
-Debug/
 *.db
 *.opendb
 .vs/

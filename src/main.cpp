@@ -2,19 +2,24 @@
 #include "jobinfo.h"
 #include "tr-getopt.h"
 
-#include <stdio.h>
-#include <string.h>
+#ifndef WIN32
 #include <unistd.h>
 #include <sys/time.h>
 #include <dirent.h>
 #include <sys/param.h>
 #include <stdlib.h>
+#endif
+
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/types.h>
 
+#include <stdio.h>
+#include <string.h>
 #include <errno.h>
 
+#ifdef WIN32
+#define stat _stat
+#endif
 
 const char * m_szTVTargetFolder = "/volume1/TV Shows";
 const char * m_szMovieTargetFolder = "/volume1/Movies";
@@ -37,9 +42,9 @@ static const char * s_lpszArchiveFiles[] = {
 #define MY_NAME "Extractor"
 #define TR_DEFAULT_RPC_WHITELIST "127.0.0.1"
 
-/***
-****  Config File
- ***/
+/*
+ *  Config File
+ */
 static const char *
 getUsage( void )
 {
@@ -87,7 +92,6 @@ const char* GetFileExt(const char* lpszFilePath)
 	return ++p;
 }
 
-
 int main(int argc, char ** argv)
 {
 	struct stat st;
@@ -125,7 +129,7 @@ int main(int argc, char ** argv)
 void FindVideoFile(const char * lpszFolder)
 {
 	char             szFilename[0x100];
-	DIR             *dirp;
+	_DIR             *dirp;
 	struct dirent   *dp;
 	struct stat      fbuf;
 

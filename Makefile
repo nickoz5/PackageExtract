@@ -1,32 +1,33 @@
-include /env.mak
+#include /env.mak
 
+SDIR=src
+ODIR=obj
+BDIR=bin
 
-SOURCES=main.cpp jobinfo.cpp tr-getopt.c
-OBJS=main.o jobinfo.o tr-getopt.o
-EXEC=extracter
-CFLAGS= -g -Wall -D_FILE_OFFSET_BITS=64
+OBJS=$(ODIR)/main.o $(ODIR)/jobinfo.o $(ODIR)/tr-getopt.o
+EXEC=$(BDIR)/pkgext
+
+CFLAGS= -g -Wall -D_FILE_OFFSET_BITS=64 -Iinclude
+LDFLAGS= -lstdc++
 
 all: $(EXEC)
 
 $(EXEC): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $@
+	$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
 
-main.o: main.cpp
-	$(CC) $(CFLAGS) -c main.cpp
+$(ODIR)/main.o: $(SDIR)/main.cpp
+	$(CC) $(CFLAGS) -o $@ -c $(SDIR)/main.cpp
 
-jobinfo.o: jobinfo.cpp
-	$(CC) $(CFLAGS) -c jobinfo.cpp
+$(ODIR)/jobinfo.o: $(SDIR)/jobinfo.cpp
+	$(CC) $(CFLAGS) -o $@ -c $(SDIR)/jobinfo.cpp
 
-tr-getopt.o: tr-getopt.c
-	$(CC) $(CFLAGS) -c tr-getopt.c
-
-
+$(ODIR)/tr-getopt.o: $(SDIR)/tr-getopt.c
+	$(CC) $(CFLAGS) -o $@ -c $(SDIR)/tr-getopt.c
 
 clean:
-	rm -rf *.o $(PROG)
+	rm -f $(ODIR)/*.o *~ core $(IDIR)/*~ $(EXEC)
 
 install: $(EXEC)
 	mkdir -p $(DESTDIR)/usr/bin/
 	install $< $(DESTDIR)/usr/bin/
-
 
