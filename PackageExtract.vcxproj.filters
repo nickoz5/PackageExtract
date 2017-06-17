@@ -15,27 +15,48 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\jobinfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\tr-getopt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\file.cpp">
+    <ClCompile Include="src\environment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\filefinder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\fileio.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\artefact.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\package.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\jobinfo.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\tr-getopt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\file.h">
+    <ClInclude Include="include\main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\environment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\filefinder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\fileio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\artefact.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\package.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

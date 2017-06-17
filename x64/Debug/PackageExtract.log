@@ -1,0 +1,8 @@
+﻿  package.cpp
+  fileio.cpp
+  filefinder.cpp
+  environment.cpp
+  artefact.cpp
+  Generating Code...
+  PackageExtract.vcxproj -> C:\codebase\Repos\PackageExtract\x64\Debug\PackageExtract.exe
+  PackageExtract.vcxproj -> C:\codebase\Repos\PackageExtract\x64\Debug\PackageExtract.pdb (Partial PDB)
