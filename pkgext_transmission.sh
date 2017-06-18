@@ -7,5 +7,7 @@
 #echo id: $TR_TORRENT_ID >> /root/started
 #echo name: $TR_TORRENT_NAME >> /root/started
 
-/opt/sbin/pkgext -p "$TR_TORRENT_DIR/$TR_TORRENT_NAME"
+export PKGEXT_PATH_TV=/volume1/TV Shows
+export PKGEXT_PATH_MOVIES=/volume1/Movies
 
+/opt/sbin/pkgext -p "$TR_TORRENT_DIR/$TR_TORRENT_NAME"

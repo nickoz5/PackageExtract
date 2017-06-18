@@ -183,7 +183,6 @@ bool package::process_payload(const std::string& filepath)
 	return true;
 }
 
-
 int package::extract_archive(const std::string& filepath, const std::string& destpath)
 {
 	std::cout << "Extracting \"" << filepath << "\" to \"" << destpath << "\"" << std::endl;

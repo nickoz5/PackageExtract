@@ -1,10 +1,23 @@
 #pragma once
 
+#include "rar.hpp"
 
 #include <stdio.h>
 #include <string>
 #include <errno.h>
 #include <iostream>
+
+#ifdef _UNIX
+#include <string.h>
+#include <unistd.h>
+#include <sys/time.h>
+#include <dirent.h>
+#include <sys/param.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#endif
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -21,6 +34,8 @@
 #define access _access
 #define stat _stat
 #define stricmp _stricmp
+#elif defined(_UNIX)
+#define stricmp strcasecmp
 #endif
 
 

@@ -71,26 +71,26 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
     <TargetName>pkgext</TargetName>
-    <IntDir>obj\$(Configuration)\$(Platform)</IntDir>
+    <IntDir>obj\$(Configuration)\$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)</OutDir>
-    <IntDir>obj\$(Configuration)\$(Platform)</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>obj\$(Configuration)\$(Platform)\</IntDir>
     <TargetName>pkgext</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>pkgext</TargetName>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)</OutDir>
-    <IntDir>obj\$(Configuration)\$(Platform)</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>obj\$(Configuration)\$(Platform)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)</OutDir>
-    <IntDir>obj\$(Configuration)\$(Platform)</IntDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>obj\$(Configuration)\$(Platform)\</IntDir>
     <TargetName>pkgext</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -172,7 +172,7 @@
     <ClCompile Include="src\filefinder.cpp" />
     <ClCompile Include="src\artefact.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\tr-getopt.c" />
+    <ClCompile Include="src\tr-getopt.cpp" />
     <ClCompile Include="unrar\archive.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -381,6 +381,71 @@
     <ClInclude Include="include\tr-getopt.h" />
     <ClInclude Include="include\environment.h" />
     <ClInclude Include="include\package.h" />
+    <ClInclude Include="unrar\archive.hpp" />
+    <ClInclude Include="unrar\array.hpp" />
+    <ClInclude Include="unrar\blake2s.hpp" />
+    <ClInclude Include="unrar\cmddata.hpp" />
+    <ClInclude Include="unrar\coder.hpp" />
+    <ClInclude Include="unrar\compress.hpp" />
+    <ClInclude Include="unrar\consio.hpp" />
+    <ClInclude Include="unrar\crc.hpp" />
+    <ClInclude Include="unrar\crypt.hpp" />
+    <ClInclude Include="unrar\dll.hpp" />
+    <ClInclude Include="unrar\encname.hpp" />
+    <ClInclude Include="unrar\errhnd.hpp" />
+    <ClInclude Include="unrar\extinfo.hpp" />
+    <ClInclude Include="unrar\extract.hpp" />
+    <ClInclude Include="unrar\filcreat.hpp" />
+    <ClInclude Include="unrar\file.hpp" />
+    <ClInclude Include="unrar\filefn.hpp" />
+    <ClInclude Include="unrar\filestr.hpp" />
+    <ClInclude Include="unrar\find.hpp" />
+    <ClInclude Include="unrar\getbits.hpp" />
+    <ClInclude Include="unrar\global.hpp" />
+    <ClInclude Include="unrar\hash.hpp" />
+    <ClInclude Include="unrar\headers.hpp" />
+    <ClInclude Include="unrar\headers5.hpp" />
+    <ClInclude Include="unrar\isnt.hpp" />
+    <ClInclude Include="unrar\list.hpp" />
+    <ClInclude Include="unrar\loclang.hpp" />
+    <ClInclude Include="unrar\log.hpp" />
+    <ClInclude Include="unrar\match.hpp" />
+    <ClInclude Include="unrar\model.hpp" />
+    <ClInclude Include="unrar\options.hpp" />
+    <ClInclude Include="unrar\os.hpp" />
+    <ClInclude Include="unrar\pathfn.hpp" />
+    <ClInclude Include="unrar\qopen.hpp" />
+    <ClInclude Include="unrar\rar.hpp" />
+    <ClInclude Include="unrar\rardefs.hpp" />
+    <ClInclude Include="unrar\rarlang.hpp" />
+    <ClInclude Include="unrar\raros.hpp" />
+    <ClInclude Include="unrar\rartypes.hpp" />
+    <ClInclude Include="unrar\rarvm.hpp" />
+    <ClInclude Include="unrar\rawint.hpp" />
+    <ClInclude Include="unrar\rawread.hpp" />
+    <ClInclude Include="unrar\rdwrfn.hpp" />
+    <ClInclude Include="unrar\recvol.hpp" />
+    <ClInclude Include="unrar\resource.hpp" />
+    <ClInclude Include="unrar\rijndael.hpp" />
+    <ClInclude Include="unrar\rs.hpp" />
+    <ClInclude Include="unrar\rs16.hpp" />
+    <ClInclude Include="unrar\savepos.hpp" />
+    <ClInclude Include="unrar\scantree.hpp" />
+    <ClInclude Include="unrar\secpassword.hpp" />
+    <ClInclude Include="unrar\sha1.hpp" />
+    <ClInclude Include="unrar\sha256.hpp" />
+    <ClInclude Include="unrar\smallfn.hpp" />
+    <ClInclude Include="unrar\strfn.hpp" />
+    <ClInclude Include="unrar\strlist.hpp" />
+    <ClInclude Include="unrar\suballoc.hpp" />
+    <ClInclude Include="unrar\system.hpp" />
+    <ClInclude Include="unrar\threadpool.hpp" />
+    <ClInclude Include="unrar\timefn.hpp" />
+    <ClInclude Include="unrar\ui.hpp" />
+    <ClInclude Include="unrar\unicode.hpp" />
+    <ClInclude Include="unrar\unpack.hpp" />
+    <ClInclude Include="unrar\version.hpp" />
+    <ClInclude Include="unrar\volume.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

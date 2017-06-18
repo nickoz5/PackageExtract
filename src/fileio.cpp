@@ -4,6 +4,7 @@
 #include "filefinder.h"
 
 
+
 fileio::fileio(const std::string& filepath) :
 	m_filepath(filepath)
 {
@@ -52,7 +53,7 @@ bool fileio::mkdir()
 	if (::_mkdir(m_filepath.c_str()) == -1)
 		return false;
 #else
-	if (::mkdir(m_filepath, 0777) == -1)
+	if (::mkdir(m_filepath.c_str(), 0777) == -1)
 		return false;
 #endif // _WIN32
 	return true;

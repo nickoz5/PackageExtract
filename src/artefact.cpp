@@ -207,7 +207,7 @@ bool artefact::get_destination_path(std::string& destpath)
 bool artefact::is_valid_artefact(const std::string& name)
 {
 	// find known package tags
-	for (int i = 0; i < sizeof(s_packagetype_tags) / sizeof(std::string); i++)
+	for (size_t i = 0; i < sizeof(s_packagetype_tags) / sizeof(std::string); i++)
 	{
 		std::basic_string <char>::size_type pos;
 		pos = name.find(s_packagetype_tags[i]);
@@ -219,7 +219,7 @@ bool artefact::is_valid_artefact(const std::string& name)
 
 bool artefact::is_quality_tag(const std::string& word)
 {
-	for (int i = 0; i < sizeof(s_quality_tags) / sizeof(std::string); i++)
+	for (size_t i = 0; i < sizeof(s_quality_tags) / sizeof(std::string); i++)
 	{
 		std::basic_string <char>::size_type pos;
 		pos = word.find(s_quality_tags[i]);

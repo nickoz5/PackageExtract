@@ -30,7 +30,7 @@ bool find_files::find_first(const std::string& path)
 	if (m_handle == NULL)
 		return false;
 #else
-	if ((m_handle = opendir(filepath)) == NULL)
+	if ((m_handle = opendir(path.c_str())) == NULL)
 		return false;
 	if (!find_next())
 		return false;
@@ -55,7 +55,7 @@ bool find_files::find_next()
 	if (FindNextFileA(m_handle, &m_file_data) == 0)
 		return false;
 #else
-	if (m_file_data = readdir(m_handle) == NULL)
+	if ((m_file_data = readdir(m_handle)) == NULL)
 		return false;
 #endif // _WIN32
 
@@ -67,7 +67,7 @@ std::string find_files::get_filename()
 #ifdef _WIN32
 	return m_file_data.cFileName;
 #else
-	return m_file_data.d_name;
+	return m_file_data->d_name;
 #endif // _WIN32
 }
 
@@ -91,7 +91,7 @@ bool find_files::is_directory()
 		return true;
 #else
 	struct stat fbuf;
-	if (stat(get_filepath(), &fbuf) >= 0)
+	if (stat(get_filepath().c_str(), &fbuf) >= 0)
 	{
 		if (S_ISDIR(fbuf.st_mode))
 			return true;

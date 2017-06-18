@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef _UNIX
+#include <sys/types.h>
+#include <dirent.h>
+#endif
 
 class find_files
 {
@@ -34,13 +38,12 @@ public:
 	// multiple search operations.
 	void close();
 
-
 private:
 #ifdef _WIN32
 	typedef HANDLE FINDHANDLE;
 	typedef WIN32_FIND_DATAA FILEDATA;
-#else
-	typedef _DIR* FINDHANDLE;
+#elif defined(_UNIX)
+	typedef struct __dirstream* FINDHANDLE;
 	typedef struct dirent* FILEDATA;
 #endif
 
