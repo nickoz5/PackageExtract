@@ -20,6 +20,9 @@ all: $(EXEC)
 $(EXEC): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
 
+.cpp.o:
+	$(CC) $(CFLAGS) -c $<
+	
 $(ODIR)/main.o: $(SDIR)/main.cpp
 	$(CC) $(CFLAGS) -o $@ -c $(SDIR)/main.cpp
 
