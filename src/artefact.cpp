@@ -54,7 +54,7 @@ bool artefact::parse()
 			// check for season/episode id
 			if (find_seasonep_id(title_word, i))
 			{
-				m_type = TYPE_TV_SERIES;
+				m_type = TYPE_SERIES;
 				break;
 			}
 
@@ -189,7 +189,7 @@ bool artefact::find_seasonep_id(const std::string& title_word, size_t pos)
 
 bool artefact::get_destination_path(std::string& destpath)
 {
-	if (m_type == TYPE_TV_SERIES)
+	if (m_type == TYPE_SERIES)
 	{
 		if (!get_series_path(destpath))
 			return false;
@@ -231,7 +231,7 @@ bool artefact::is_quality_tag(const std::string& word)
 
 bool artefact::get_series_path(std::string& destpath)
 {
-	if (m_type != TYPE_TV_SERIES)
+	if (m_type != TYPE_SERIES)
 		return false;
 
 	std::ostringstream ospath;
@@ -283,20 +283,12 @@ bool artefact::get_movies_path(std::string& destpath)
 	ospath << environment::get("PKGEXT_PATH_TV");
 	if (!fileio(ospath.str()).exists())
 	{
-		std::cout << "Error: destination unavailable (" << ospath.str() << ")" << std::endl;
+		std::cout << "Error: destination unavailable \"" << ospath.str() << "\"" << std::endl;
 		return false;
 	}
 
 	if (ospath.str()[ospath.str().length() - 1] != fileio::s_dir_sep)
 		ospath << fileio::s_dir_sep;
-
-	if (m_type == artefact::TYPE_MOVIE_DVD)
-	{
-		ospath << m_title;
-		if (m_year > 0)
-			ospath << " (" << m_year << ")";
-		ospath << fileio::s_dir_sep;
-	}
 
 	return true;
 }

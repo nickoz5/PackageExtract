@@ -13,9 +13,8 @@ public:
 	typedef enum
 	{
 		TYPE_UNKNOWN = 0x00,
-		TYPE_TV_SERIES = 0x01,
-		TYPE_MOVIE = 0x02,
-		TYPE_MOVIE_DVD = 0x03
+		TYPE_SERIES = 0x01,
+		TYPE_MOVIE = 0x02
 	} TypeEnum;
 	TypeEnum get_type() const { return m_type; }
 
@@ -26,7 +25,7 @@ public:
 	std::string get_type_string()
 	{
 		std::string type("Unknown");
-		if (m_type == artefact::TYPE_TV_SERIES)	type = "TV Series";
+		if (m_type == artefact::TYPE_SERIES)	type = "Series";
 		if (m_type == artefact::TYPE_MOVIE)		type = "Movie";
 		return type;
 	}
@@ -59,6 +58,7 @@ private:
 	// movie info
 	int m_year;
 
+private:
 	bool is_valid_artefact(const std::string& name);
 
 	bool is_quality_tag(const std::string& word);
