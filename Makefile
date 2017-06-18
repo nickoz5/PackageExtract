@@ -4,33 +4,39 @@ SDIR=src
 ODIR=obj
 BDIR=bin
 
-OBJS=main.o jobinfo.o tr-getopt.o rar.o strlist.o strfn.o pathfn.o smallfn.o global.o file.o filefn.o filcreat.o \
-	archive.o arcread.o unicode.o system.o isnt.o crypt.o crc.o rawread.o encname.o \
-	resource.o match.o timefn.o rdwrfn.o consio.o options.o errhnd.o rarvm.o secpassword.o \
-	rijndael.o getbits.o sha1.o sha256.o blake2s.o hash.o extinfo.o extract.o volume.o \
-  list.o find.o unpack.o headers.o threadpool.o rs16.o cmddata.o ui.o
-  
+srcdir = src
+
+SRCS=main.cpp jobinfo.cpp
+SRCS_C=tr-getopt.c
+UNRAR_SRCS=rar.cpp strlist.cpp strfn.cpp pathfn.cpp smallfn.cpp global.cpp file.cpp filefn.cpp filcreat.cpp \
+	archive.cpp arcread.cpp unicode.cpp system.cpp isnt.cpp crypt.cpp crc.cpp rawread.cpp encname.cpp \
+	resource.cpp match.cpp timefn.cpp rdwrfn.cpp consio.cpp options.cpp errhnd.cpp rarvm.cpp secpassword.cpp \
+	rijndael.cpp getbits.cpp sha1.cpp sha256.cpp blake2s.cpp hash.cpp extinfo.cpp extract.cpp volume.cpp \
+  list.cpp find.cpp unpack.cpp headers.cpp threadpool.cpp rs16.cpp cmddata.cpp ui.cpp
+ 
+OBJS = $(SRCS:.cpp=.o) $(SRCS_C:.c=.o) $(UNRAR_SRCS:.cpp=.o)
+INCS = 
+
 EXEC=$(BDIR)/pkgext
 
 CFLAGS= -g -Wall -D_FILE_OFFSET_BITS=64 -Iinclude
 LDFLAGS= -lstdc++
 
+.PHONY: all
 all: $(EXEC)
 
 $(EXEC): $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LDFLAGS) -o $@
-
-.cpp.o:
-	$(CC) $(CFLAGS) -c $<
 	
-$(ODIR)/main.o: $(SDIR)/main.cpp
-	$(CC) $(CFLAGS) -o $@ -c $(SDIR)/main.cpp
-
-$(ODIR)/jobinfo.o: $(SDIR)/jobinfo.cpp
-	$(CC) $(CFLAGS) -o $@ -c $(SDIR)/jobinfo.cpp
-
-$(ODIR)/tr-getopt.o: $(SDIR)/tr-getopt.c
-	$(CC) $(CFLAGS) -o $@ -c $(SDIR)/tr-getopt.c
+$(OBJS): $(SRCS) $(UNRAR_SRCS)
+#$(ODIR)/main.o: $(SDIR)/main.cpp
+#	$(CC) $(CFLAGS) -o $@ -c $(SDIR)/main.cpp
+#
+#$(ODIR)/jobinfo.o: $(SDIR)/jobinfo.cpp
+#	$(CC) $(CFLAGS) -o $@ -c $(SDIR)/jobinfo.cpp
+#
+#$(ODIR)/tr-getopt.o: $(SDIR)/tr-getopt.c
+#	$(CC) $(CFLAGS) -o $@ -c $(SDIR)/tr-getopt.c
 
 clean:
 	rm -f $(ODIR)/*.o *~ core $(IDIR)/*~ $(EXEC)
