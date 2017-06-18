@@ -7,11 +7,16 @@ const std::string environment::s_env_default_prefix = "ENV:";
 // default value (optional) Use the system environment to override.
 const std::string environment::s_env_defaults[][2] =
 {
-	{ "PKGEXT_PATH", "." },						// path to source packages
-	{ "PKGEXT_PATH_TV", "/volume1/TV Shows" },	// path to destination tv show files extracted from package(s)
-	{ "PKGEXT_PATH_MOVIES", "/volume1/Movies" },// path to destination movie files extracted from package(s)
-	{ "PKGEXT_TEMP", "ENV:TEMP" },				// temp folder used for extracting
-	{ "NULL", "NULL" }							// end of list
+	{ "PKGEXT_PATH", "." },			// path to source packages
+	{ "PKGEXT_PATH_TV", "" },		// path to destination tv show files extracted from package(s)
+	{ "PKGEXT_PATH_MOVIES", "" },	// path to destination movie files extracted from package(s)
+#ifdef _WIN32
+	{ "PKGEXT_TEMP", "ENV:TEMP" }	// temp folder used for extracting
+#elif _UNIX
+	{ "PKGEXT_TEMP", "/var/tmp" }	// full path to unrar executable
+#else
+	{ "PKGEXT_TEMP", "." }
+#endif // _DEBUG
 };
 
 const struct tr_option environment::s_cmdline_options[] =

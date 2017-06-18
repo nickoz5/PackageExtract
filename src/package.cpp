@@ -4,17 +4,18 @@
 #include "fileio.h"
 #include "filefinder.h"
 #include "artefact.h"
+#include "rar.hpp"
 
-#ifndef _WIN32
-#include <unistd.h>
-#include <sys/time.h>
-#include <dirent.h>
-#include <sys/param.h>
-#include <stdlib.h>
-#endif
-
-#include <sys/types.h>
-#include <sys/stat.h>
+//#ifndef _WIN32
+//#include <unistd.h>
+//#include <sys/time.h>
+//#include <dirent.h>
+//#include <sys/param.h>
+//#include <stdlib.h>
+//#endif
+//
+//#include <sys/types.h>
+//#include <sys/stat.h>
 
 
 const char * package::s_video_files_ext[] = {
@@ -57,7 +58,7 @@ void package::scan_directory(const std::string& sourcepath)
 {
 	find_files finder;
 
-	std::cout << "Scanning source path: " << sourcepath << std::endl;
+	std::cout << "Scanning source path \"" << sourcepath << "\"" << std::endl;
 
 	// find video files..
 	if (!finder.find_first(sourcepath))
@@ -95,7 +96,7 @@ void package::process_archive(const std::string& filepath)
 	{
 		if (!fileio(destpath).mkdir())
 		{
-			std::cout << "Error: Unable to create torrent temp folder for extracting (" << destpath << ")" << std::endl;
+			std::cout << "Error: Unable to create torrent temp folder for extracting \"" << destpath << "\"" << std::endl;
 			return;
 		}
 	}
@@ -134,7 +135,6 @@ bool package::is_archive_file(const std::string& filename)
 	return false;
 }
 
-
 bool package::process_payload(const std::string& filepath)
 {
 	// if file contains 'sample' - ignore.
@@ -145,140 +145,98 @@ bool package::process_payload(const std::string& filepath)
 	if (!this_artefact.parse())
 		return false;
 
-	std::cout << "szTitle: " << this_artefact.m_title << std::endl;
-	std::cout << "nType: " << this_artefact.m_type << std::endl;
-	std::cout << "nSeasonNum: " << this_artefact.m_season_no << std::endl;
-	std::cout << "nEpisodeNum: " << this_artefact.m_episode_no << std::endl;
-/*
-	// check again that the destination is accessible.
-	if ((jobinfo.m_nType == package::TYPE_TV_SERIES && stat(m_szTVTargetFolder, &st) == -1) ||
-		(jobinfo.m_nType == package::TYPE_MOVIE && stat(m_szMovieTargetFolder, &st) == -1))
-	{
+	std::cout << "Found artefact:" << std::endl;
+	std::cout << "  Type: " << this_artefact.get_type_string() << std::endl;
+	std::cout << "  Title: " << this_artefact.get_title() << std::endl;
+	std::cout << "  Season: " << this_artefact.get_season() << std::endl;
+	std::cout << "  Episode: " << this_artefact.get_episode() << std::endl;
+
+	std::string destfilepath;
+	if (!this_artefact.get_destination_path(destfilepath))
 		return false;
-	}
 
-	if (jobinfo.m_nType == package::TYPE_TV_SERIES)
-	{
-		char szTargetTitleDir[FILENAME_MAX];
-		char szTargetSeasonDir[FILENAME_MAX];
+	destfilepath += fileio(filepath).get_filename();
 
-		sstd::cout << szTargetTitleDir, "%s/%s", m_szTVTargetFolder, jobinfo.m_szTitle);
-
-		if (jobinfo.m_nSeasonNum > 0)
-			sstd::cout << szTargetSeasonDir, "%s/Season %d", szTargetTitleDir, jobinfo.m_nSeasonNum);
-		else
-			strcpy(szTargetSeasonDir, szTargetTitleDir);
-
-		if (stat(szTargetTitleDir, &st) == -1)
-		{
-			if (mkdir(szTargetTitleDir, 0777) == -1)
-			{
-				perror("Unable to create target directory");
-				return false;
-			}
-		}
-		if (stat(szTargetSeasonDir, &st) == -1) {
-			if (mkdir(szTargetSeasonDir, 0777) == -1)
-			{
-				perror("Unable to create target directory");
-				return false;
-			}
-		}
-
-		strcpy(szTargetFolder, szTargetSeasonDir);
-		sstd::cout << m_szTargetFilePath, "%s/%s", szTargetFolder, szSourceFileName);
-	}
-
-	if (jobinfo.m_nType == package::TYPE_MOVIE)
-	{
-		sstd::cout << szTargetFolder, "%s", m_szMovieTargetFolder);
-
-		// dont want to copy to separate folders anymore..
-		//if (jobinfo.m_nYear > 0)
-		//	sstd::cout << szTargetFolder, "%s/%s (%d)", m_szMovieTargetFolder, jobinfo.m_szTitle, jobinfo.m_nYear);
-		//else
-		//	sstd::cout << szTargetFolder, "%s/%s", m_szMovieTargetFolder, jobinfo.m_szTitle);
-
-		if (stat(szTargetFolder, &st) == -1)
-		{
-			if (mkdir(szTargetFolder, 0777) == -1)
-			{
-				perror("Unable to create target directory");
-				return false;
-			}
-		}
-
-		const char* p = strrchr(szSourceFileName, '.');
-		if (p == NULL)
-		{
-			std::cout << "Unable to determine file extension: %s\n", jobinfo.m_szTitle);
-			return false;
-		}
-
-		sstd::cout << m_szTargetFilePath, "%s/%s",
-			szTargetFolder, szSourceFileName);
-	}
-
-	if (jobinfo.m_nType == package::TYPE_MOVIE_DVD)
-	{
-		strcpy(szTargetFolder, m_szMovieTargetFolder);
-
-		if (jobinfo.m_nYear > 0)
-			sstd::cout << m_szTargetFilePath, "%s/%s (%d)/%s",
-				szTargetFolder,
-				jobinfo.m_szTitle,
-				jobinfo.m_nYear,
-				szSourceFileName);
-		else
-			sstd::cout << m_szTargetFilePath, "%s/%s/%s",
-				szTargetFolder,
-				jobinfo.m_szTitle,
-				szSourceFileName);
-	}
-
-
-	strcpy(m_szCopySourceFileName, szSourceFileName);
-	strcpy(m_szCopyTargetFolder, szTargetFolder);
-	strcpy(m_szCopySourceFolder, szSourceFolder);
-
-	std::cout << "Moving file: %s to %s\n", lpszFilePath, m_szTargetFilePath);
+	std::cout << "Deploying artefact \"" << filepath << "\" to \"" << destfilepath << "\"" << std::endl;
 
 	// make sure target file does not exist..
-	if (jobinfo.m_nType != package::TYPE_MOVIE && access(m_szTargetFilePath, 0x00)) {
+	if (fileio(destfilepath).exists())
+	{
 		// file exists..
-		if (unlink(m_szTargetFilePath) == -1)
+		if (fileio(destfilepath).remove() == -1)
 		{
-			perror("Unable to delete target");
+			std::cout << "Error: Unable to delete existing target" << std::endl;
 			return false;
 		}
 	}
 
-	std::cout << "/bin/mv %s %s\n", lpszFilePath, m_szTargetFilePath);
-	if (execl("/bin/mv", "/bin/mv", lpszFilePath, m_szTargetFilePath, NULL) == -1)
+	if (::rename(filepath.c_str(), destfilepath.c_str()) == -1)
 	{
-		perror("File copy failed");
-		unlink(m_szTargetFilePath);
+		std::cout << "Error: Deployment failed" << std::endl;
+
+		fileio(destfilepath).remove();
 		return false;
 	}
 
-	std::cout << "Copy completed: %s to %s\n", jobinfo.m_szTitle, m_szTargetFilePath);
-	*/
+	std::cout << "Deployment completed successfully" << std::endl;
+
 	return true;
 }
 
 
-bool package::extract_archive(const std::string& filepath, const std::string& destpath)
+int package::extract_archive(const std::string& filepath, const std::string& destpath)
 {
-	std::cout << "Extracting " << filepath << " to " << destpath << std::endl;
+	std::cout << "Extracting \"" << filepath << "\" to \"" << destpath << "\"" << std::endl;
 	
-	std::string cmd;
-	cmd = "unrar e -o+ -inul " + filepath + " " + destpath;
+	char* argv[] = { "unrar", "e", "-o+", "-inul", (char*)filepath.c_str(), (char*)destpath.c_str(), NULL };
+	int argc = sizeof(argv) / sizeof(char*) - 1;
 
-#ifdef _WIN32
-	int status = 0;
+	//"unrar e -o+ -inul " + filepath + " " + destpath;
+
+#ifdef SFX_MODULE
+	wchar ModuleName[NM];
+#ifdef _WIN_ALL
+	GetModuleFileName(NULL, ModuleName, ASIZE(ModuleName));
 #else
-	int status = system(cmd);
+	CharToWide(argv[0], ModuleName, ASIZE(ModuleName));
+#endif
 #endif
 
-	return status == 0;
+	CommandData *Cmd = new CommandData;
+
+	try
+	{
+		Cmd->ParseCommandLine(true, argc, argv);
+		if (!Cmd->ConfigDisabled)
+		{
+			Cmd->ReadConfig();
+			Cmd->ParseEnvVar();
+		}
+		Cmd->ParseCommandLine(false, argc, argv);
+
+		uiInit(false);
+		InitConsoleOptions(Cmd->MsgStream, Cmd->RedirectCharset);
+		InitLogOptions(Cmd->LogName, Cmd->ErrlogCharset);
+		ErrHandler.SetSilent(Cmd->AllYes || Cmd->MsgStream == MSG_NULL);
+
+		Cmd->OutTitle();
+		Cmd->ProcessCommand();
+	}
+	catch (RAR_EXIT ErrCode)
+	{
+		ErrHandler.SetErrorCode(ErrCode);
+	}
+	catch (std::bad_alloc&)
+	{
+		ErrHandler.MemoryErrorMsg();
+		ErrHandler.SetErrorCode(RARX_MEMORY);
+	}
+	catch (...)
+	{
+		ErrHandler.SetErrorCode(RARX_FATAL);
+	}
+
+	delete Cmd;
+
+	return ErrHandler.GetErrorCode();
 }

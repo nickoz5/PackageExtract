@@ -1,9 +1,9 @@
 #include "main.h"
 #include "artefact.h"
 #include "fileio.h"
+#include "environment.h"
 
-//#include <stdlib.h>
-//#include <memory>
+#include <sstream>
 
 
 const std::string artefact::s_packagetype_tags[] =
@@ -33,10 +33,9 @@ bool artefact::parse()
 	std::string title;
 	std::string title_word;
 
-	std::string filename = fileio(m_filepath).get_filename();
-	to_lower(filename);
+	std::string filename = to_lower(fileio(m_filepath).get_filename());
 	
-	if (!is_valid_artefact())
+	if (!is_valid_artefact(filename))
 		return false;
 
 	// is TV show..
@@ -59,7 +58,7 @@ bool artefact::parse()
 				break;
 			}
 
-			// check for a year/date episode name
+			// check for a movie year id
 			if (find_movieyear_id(title_word))
 			{
 				m_type = TYPE_MOVIE;
@@ -81,7 +80,7 @@ bool artefact::parse()
 		title_word += ch;
 	}
 
-	if (title.empty())
+	if (title.empty() || m_type == TYPE_UNKNOWN)
 	{
 		return false;
 	}
@@ -122,7 +121,7 @@ bool artefact::find_seasonep_id(const std::string& title_word, size_t pos)
 	std::string filename = fileio(m_filepath).get_filename();
 
 	// check S00E00
-	if (title_word.length() >= 6 && (title_word[0] == 'S' || title_word[0] == 's') && (title_word[3] == 'E' || title_word[3] == 'e'))
+	if (title_word.length() >= 6 && (title_word[0] == 's') && (title_word[3] == 'e'))
 	{
 		if (is_number(title_word[1]) && is_number(title_word[2]) &&
 			is_number(title_word[4]) && is_number(title_word[5]))
@@ -135,7 +134,7 @@ bool artefact::find_seasonep_id(const std::string& title_word, size_t pos)
 	}
 
 	// check S00
-	if (title_word.length() >= 3 && (title_word[0] == 'S' || title_word[0] == 's'))
+	if (title_word.length() >= 3 && (title_word[0] == 's'))
 	{
 		if (is_number(title_word[1]) && is_number(title_word[2]))
 		{
@@ -147,7 +146,7 @@ bool artefact::find_seasonep_id(const std::string& title_word, size_t pos)
 	}
 
 	// check 00x00
-	if (title_word.length() == 5 && (title_word[2] == 'X' || title_word[2] == 'x'))
+	if (title_word.length() == 5 && (title_word[2] == 'x'))
 	{
 		if (is_number(title_word[0]) && is_number(title_word[1]) &&
 			is_number(title_word[3]) && is_number(title_word[4]))
@@ -188,13 +187,31 @@ bool artefact::find_seasonep_id(const std::string& title_word, size_t pos)
 	return false;
 }
 
-bool artefact::is_valid_artefact()
+bool artefact::get_destination_path(std::string& destpath)
+{
+	if (m_type == TYPE_TV_SERIES)
+	{
+		if (!get_series_path(destpath))
+			return false;
+	}
+
+	if (m_type == TYPE_MOVIE)
+	{
+		if (!get_movies_path(destpath))
+			return false;
+	}
+
+	return true;
+}
+
+bool artefact::is_valid_artefact(const std::string& name)
 {
 	// find known package tags
 	for (int i = 0; i < sizeof(s_packagetype_tags) / sizeof(std::string); i++)
 	{
-		size_t pos = m_title.find(s_packagetype_tags[i]);
-		if (pos != m_title.npos)
+		std::basic_string <char>::size_type pos;
+		pos = name.find(s_packagetype_tags[i]);
+		if (pos != std::string::npos)
 			return true;
 	}
 	return false;
@@ -202,12 +219,84 @@ bool artefact::is_valid_artefact()
 
 bool artefact::is_quality_tag(const std::string& word)
 {
-	bool found_tag = false;
-	for (int i = 0; i < sizeof(s_quality_tags) / sizeof(char*); i++)
+	for (int i = 0; i < sizeof(s_quality_tags) / sizeof(std::string); i++)
 	{
-		size_t pos = m_title.find(s_quality_tags[i]);
-		if (pos != m_title.npos)
+		std::basic_string <char>::size_type pos;
+		pos = word.find(s_quality_tags[i]);
+		if (pos != std::string::npos)
 			return true;
 	}
-	return found_tag;
+	return false;
+}
+
+bool artefact::get_series_path(std::string& destpath)
+{
+	if (m_type != TYPE_TV_SERIES)
+		return false;
+
+	std::ostringstream ospath;
+
+	ospath << environment::get("PKGEXT_PATH_TV");
+	if (!fileio(ospath.str()).exists())
+	{
+		std::cout << "Error: destination unavailable (" << ospath.str() << ")" << std::endl;
+		return false;
+	}
+
+	if (ospath.str()[ospath.str().length() - 1] != fileio::s_dir_sep)
+		ospath << fileio::s_dir_sep;
+
+	ospath << m_title << fileio::s_dir_sep;
+	if (!fileio(ospath.str()).exists())
+	{
+		if (!fileio(ospath.str()).mkdir())
+		{
+			std::cout << "Error: unable to create title folder (" << ospath.str() << ")" << std::endl;
+			return false;
+		}
+	}
+
+	if (m_season_no > 0)
+	{
+		ospath << "Season ";
+		ospath << m_season_no;
+		ospath << fileio::s_dir_sep;
+		if (!fileio(ospath.str()).exists())
+		{
+			if (!fileio(ospath.str()).mkdir())
+			{
+				std::cout << "Error: unable to create title folder (" << ospath.str() << ")" << std::endl;
+				return false;
+			}
+		}
+	}
+
+	destpath = ospath.str();
+
+	return true;
+}
+
+bool artefact::get_movies_path(std::string& destpath)
+{
+	std::ostringstream ospath;
+
+	ospath << environment::get("PKGEXT_PATH_TV");
+	if (!fileio(ospath.str()).exists())
+	{
+		std::cout << "Error: destination unavailable (" << ospath.str() << ")" << std::endl;
+		return false;
+	}
+
+	if (ospath.str()[ospath.str().length() - 1] != fileio::s_dir_sep)
+		ospath << fileio::s_dir_sep;
+
+	if (m_type == artefact::TYPE_MOVIE_DVD)
+	{
+		ospath << m_title;
+		if (m_year > 0)
+			ospath << " (" << m_year << ")";
+		ospath << fileio::s_dir_sep;
+	}
+
+	return true;
 }

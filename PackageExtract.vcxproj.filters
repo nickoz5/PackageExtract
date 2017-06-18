@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Unrar">
+      <UniqueIdentifier>{0e9bad0a-76bc-4fad-839d-83c507959271}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -35,6 +38,153 @@
     </ClCompile>
     <ClCompile Include="src\package.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\volume.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\archive.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\arcread.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\blake2s.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\consio.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\crc.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\crypt.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\encname.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\errhnd.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\extinfo.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\extract.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\filcreat.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\file.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\filefn.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\filestr.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\find.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\getbits.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\global.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\hash.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\headers.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\isnt.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\list.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\match.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\options.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\pathfn.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\qopen.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\rarpch.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\rarvm.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\rawread.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\rdwrfn.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\recvol.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\resource.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\rijndael.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\rs.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\rs16.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\scantree.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\secpassword.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\sha1.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\sha256.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\smallfn.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\strfn.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\strlist.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\system.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\threadpool.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\timefn.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\ui.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\unicode.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\unpack.cpp">
+      <Filter>Unrar</Filter>
+    </ClCompile>
+    <ClCompile Include="unrar\cmddata.cpp">
+      <Filter>Unrar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,7 @@
 #pragma once
 
+#include"artefact.h"
+
 class package
 {
 public:
@@ -20,10 +22,12 @@ private:
 	// process the given payload
 	bool process_payload(const std::string& filepath);
 
+	bool get_series_path(const artefact &this_artefact);
+
 	bool is_payload(const std::string& filename);
 	bool is_archive_file(const std::string& filename);
 
-	bool extract_archive(const std::string& filepath, const std::string& destpath);
+	int extract_archive(const std::string& filepath, const std::string& destpath);
 
 private:
 	// list of known video file extensions
