@@ -35,9 +35,7 @@ void init_logger()
 
 int main(int argc, char ** argv)
 {
-#ifdef _UNIX
 	setlocale(LC_ALL, "");
-#endif
 
 	if (!environment::init(argc, argv))
 	{

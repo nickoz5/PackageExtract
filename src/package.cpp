@@ -185,12 +185,12 @@ bool package::process_payload(const std::string& filepath)
 
 int package::extract_archive(const std::string& filepath, const std::string& destpath)
 {
+	int nErrorCode = 0;
+
 	LOG("Extracting \"{}\" to \"{}\"", filepath.c_str(), destpath.c_str());
 	
 	char* argv[] = { "unrar", "e", "-o+", "-inul", (char*)filepath.c_str(), (char*)destpath.c_str(), NULL };
 	int argc = sizeof(argv) / sizeof(char*) - 1;
-
-	//"unrar e -o+ -inul " + filepath + " " + destpath;
 
 #ifdef SFX_MODULE
 	wchar ModuleName[NM];
@@ -214,28 +214,31 @@ int package::extract_archive(const std::string& filepath, const std::string& des
 		Cmd->ParseCommandLine(false, argc, argv);
 
 		uiInit(false);
-		InitConsoleOptions(Cmd->MsgStream, Cmd->RedirectCharset);
-		InitLogOptions(Cmd->LogName, Cmd->ErrlogCharset);
-		ErrHandler.SetSilent(Cmd->AllYes || Cmd->MsgStream == MSG_NULL);
+		//InitConsoleOptions(Cmd->MsgStream, Cmd->RedirectCharset);
+
+		ErrHandler.SetSilent(true);
 
 		Cmd->OutTitle();
 		Cmd->ProcessCommand();
 	}
 	catch (RAR_EXIT ErrCode)
 	{
-		ErrHandler.SetErrorCode(ErrCode);
+		nErrorCode = ErrCode;
+		LOG("Extraction of \"{}\" failed - error code {}", filepath.c_str(), ErrCode);
 	}
 	catch (std::bad_alloc&)
 	{
-		ErrHandler.MemoryErrorMsg();
-		ErrHandler.SetErrorCode(RARX_MEMORY);
+		LOG("Extraction of \"{}\" failed - out of memory", filepath.c_str());
+		nErrorCode = RARX_MEMORY;
 	}
 	catch (...)
 	{
-		ErrHandler.SetErrorCode(RARX_FATAL);
+		LOG("Extraction of \"{}\" failed", filepath.c_str());
+		nErrorCode = RARX_FATAL;
 	}
 
 	delete Cmd;
 
-	return ErrHandler.GetErrorCode();
+	LOG("Extraction of \"{}\" completed", filepath.c_str());
+	return nErrorCode;
 }
