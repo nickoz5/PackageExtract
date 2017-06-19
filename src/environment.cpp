@@ -75,7 +75,7 @@ void environment::read_defaults()
 		std::string value = s_env_defaults[i][1];
 
 		// check if the system environment exists
-		char* env_value = std::getenv(key.c_str());
+		char* env_value = getenv(key.c_str());
 		if (env_value)
 			value = env_value;
 
@@ -86,7 +86,7 @@ void environment::read_defaults()
 			if (value.substr(0, len) == s_env_default_prefix)
 			{
 				std::string env_key = value.substr(len, value.length() - len);
-				env_value = std::getenv(env_key.c_str());
+				env_value = getenv(env_key.c_str());
 				if (env_value)
 					value = env_value;
 				else
