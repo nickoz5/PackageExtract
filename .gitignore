@@ -3,4 +3,5 @@ obj/
 *.db
 *.opendb
 .vs/
+*.vcxproj.user
 
