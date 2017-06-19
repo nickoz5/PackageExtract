@@ -44,7 +44,7 @@ bool package::process()
 	//if (access(m_szTVTargetFolder, 0x00) == -1 ||
 	//	stat(m_szMovieTargetFolder, &st) == -1)
 	//{
-	//	std::cout << "Error: Please set EXTRACTOR_TV_DEST and EXTRACTOR_MOVIE_DEST environment variables.\n");
+	//	LOG("Error: Please set EXTRACTOR_TV_DEST and EXTRACTOR_MOVIE_DEST environment variables.");
 	//	return -1;
 	//}
 
@@ -58,12 +58,12 @@ void package::scan_directory(const std::string& sourcepath)
 {
 	find_files finder;
 
-	std::cout << "Scanning source path \"" << sourcepath << "\"" << std::endl;
+	LOG("Scanning source path \"{}\"", sourcepath.c_str());
 
 	// find video files..
 	if (!finder.find_first(sourcepath))
 	{
-		std::cout << "Error: Unable to open source path" << std::endl;
+		LOG("Error: Unable to open source path \"{}\"", sourcepath.c_str());
 		return;
 	}
 
@@ -96,7 +96,7 @@ void package::process_archive(const std::string& filepath)
 	{
 		if (!fileio(destpath).mkdir())
 		{
-			std::cout << "Error: Unable to create torrent temp folder for extracting \"" << destpath << "\"" << std::endl;
+			LOG("Error: Unable to create torrent temp folder for extracting \"{}\"", destpath.c_str());
 			return;
 		}
 	}
@@ -145,11 +145,11 @@ bool package::process_payload(const std::string& filepath)
 	if (!this_artefact.parse())
 		return false;
 
-	std::cout << "Found artefact:" << std::endl;
-	std::cout << "  Type: " << this_artefact.get_type_string() << std::endl;
-	std::cout << "  Title: " << this_artefact.get_title() << std::endl;
-	std::cout << "  Season: " << this_artefact.get_season() << std::endl;
-	std::cout << "  Episode: " << this_artefact.get_episode() << std::endl;
+	LOG("Found artefact:");
+	LOG("  Type:    {}", this_artefact.get_type_string().c_str());
+	LOG("  Title:   {}", this_artefact.get_title().c_str());
+	LOG("  Season:  {}", this_artefact.get_season());
+	LOG("  Episode: {}", this_artefact.get_episode());
 
 	std::string destfilepath;
 	if (!this_artefact.get_destination_path(destfilepath))
@@ -157,7 +157,7 @@ bool package::process_payload(const std::string& filepath)
 
 	destfilepath += fileio(filepath).get_filename();
 
-	std::cout << "Deploying artefact \"" << filepath << "\" to \"" << destfilepath << "\"" << std::endl;
+	LOG("Deploying artefact \"{}\" to \"{}\"", filepath.c_str(), destfilepath.c_str());
 
 	// make sure target file does not exist..
 	if (fileio(destfilepath).exists())
@@ -165,27 +165,27 @@ bool package::process_payload(const std::string& filepath)
 		// file exists..
 		if (fileio(destfilepath).remove() == -1)
 		{
-			std::cout << "Error: Unable to delete existing target" << std::endl;
+			LOG("Error: Unable to delete existing target");
 			return false;
 		}
 	}
 
 	if (::rename(filepath.c_str(), destfilepath.c_str()) == -1)
 	{
-		std::cout << "Error: Deployment failed" << std::endl;
+		LOG("Error: Deployment failed");
 
 		fileio(destfilepath).remove();
 		return false;
 	}
 
-	std::cout << "Deployment completed successfully" << std::endl;
+	LOG("Deployment completed successfully");
 
 	return true;
 }
 
 int package::extract_archive(const std::string& filepath, const std::string& destpath)
 {
-	std::cout << "Extracting \"" << filepath << "\" to \"" << destpath << "\"" << std::endl;
+	LOG("Extracting \"{}\" to \"{}\"", filepath.c_str(), destpath.c_str());
 	
 	char* argv[] = { "unrar", "e", "-o+", "-inul", (char*)filepath.c_str(), (char*)destpath.c_str(), NULL };
 	int argc = sizeof(argv) / sizeof(char*) - 1;

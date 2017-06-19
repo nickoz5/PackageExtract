@@ -239,7 +239,7 @@ bool artefact::get_series_path(std::string& destpath)
 	ospath << environment::get("PKGEXT_PATH_TV");
 	if (!fileio(ospath.str()).exists())
 	{
-		std::cout << "Error: destination unavailable (" << ospath.str() << ")" << std::endl;
+		LOG("Error: destination unavailable \"%s\"", ospath.str());
 		return false;
 	}
 
@@ -251,7 +251,7 @@ bool artefact::get_series_path(std::string& destpath)
 	{
 		if (!fileio(ospath.str()).mkdir())
 		{
-			std::cout << "Error: unable to create title folder (" << ospath.str() << ")" << std::endl;
+			LOG("Error: unable to create title folder \"%s\"", ospath.str());
 			return false;
 		}
 	}
@@ -265,7 +265,7 @@ bool artefact::get_series_path(std::string& destpath)
 		{
 			if (!fileio(ospath.str()).mkdir())
 			{
-				std::cout << "Error: unable to create title folder (" << ospath.str() << ")" << std::endl;
+				LOG("Error: unable to create title folder \"%s\"", ospath.str());
 				return false;
 			}
 		}
@@ -283,7 +283,7 @@ bool artefact::get_movies_path(std::string& destpath)
 	ospath << environment::get("PKGEXT_PATH_TV");
 	if (!fileio(ospath.str()).exists())
 	{
-		std::cout << "Error: destination unavailable \"" << ospath.str() << "\"" << std::endl;
+		LOG("Error: destination unavailable \"%s\"", ospath.str());
 		return false;
 	}
 

@@ -4,16 +4,44 @@
 
 #include "rar.hpp"
 
+std::shared_ptr<spdlog::logger> logger()
+{
+	std::shared_ptr<spdlog::logger> logger = spdlog::get("pkgext");
+	return logger;
+}
 
+void init_logger()
+{
+	try
+	{
+		std::string filename = environment::get("PKGEXT_LOG");
+		if (filename.empty())
+			spdlog::stdout_color_mt("pkgext");
+		else
+			// Create a daily logger - a new file is created every day on 2:30am
+			spdlog::daily_logger_mt("pkgext", filename, 2, 30);
+
+		// trigger flush if the log severity is error or higher
+		logger()->flush_on(spdlog::level::err);
+
+		// Customize msg format for all messages
+		spdlog::set_pattern("[%H:%M:%S %z] [thread %t] %v");
+	}
+	// Exceptions will only be thrown upon failed logger or sink construction (not during logging)
+	catch (const spdlog::spdlog_ex& ex)
+	{
+		std::cout << "Log init failed: " << ex.what() << std::endl;
+	}
+}
 
 int main(int argc, char ** argv)
 {
 #ifdef _UNIX
 	setlocale(LC_ALL, "");
 #endif
-	
+
 	ErrHandler.SetSignalHandlers(true);
-		
+
 #ifdef _WIN_ALL
 	SetErrorMode(SEM_NOALIGNMENTFAULTEXCEPT | SEM_FAILCRITICALERRORS | SEM_NOOPENFILEERRORBOX);
 #endif
@@ -23,6 +51,10 @@ int main(int argc, char ** argv)
 		std::cout << "Error: initializing environment" << std::endl;
 		return -1;
 	}
+
+	init_logger();
+
+	environment::dump_environment();
 
 	package* a_package = new package();
 
