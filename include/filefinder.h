@@ -1,9 +1,5 @@
 #pragma once
 
-#ifdef _UNIX
-#include <sys/types.h>
-#include <dirent.h>
-#endif
 
 class find_files
 {
