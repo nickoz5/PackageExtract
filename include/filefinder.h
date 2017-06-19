@@ -42,7 +42,7 @@ private:
 #ifdef _WIN32
 	typedef HANDLE FINDHANDLE;
 	typedef WIN32_FIND_DATAA FILEDATA;
-#elif defined(_UNIX)
+#else
 	typedef struct __dirstream* FINDHANDLE;
 	typedef struct dirent* FILEDATA;
 #endif

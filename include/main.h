@@ -1,14 +1,12 @@
 #pragma once
 
-#include "rar.hpp"
-#include "spdlog/spdlog.h"
-
 #include <stdio.h>
 #include <string>
 #include <errno.h>
 #include <iostream>
+#include "spdlog/spdlog.h"
 
-#ifdef _UNIX
+#ifndef _WIN32
 #include <string.h>
 #include <unistd.h>
 #include <sys/time.h>
@@ -35,7 +33,7 @@
 #define access _access
 #define stat _stat
 #define stricmp _stricmp
-#elif defined(_UNIX)
+#else
 #define stricmp strcasecmp
 #endif
 

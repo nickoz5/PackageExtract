@@ -1,8 +1,7 @@
 #include "main.h"
 #include "package.h"
 #include "environment.h"
-
-#include "rar.hpp"
+#include "spdlog/spdlog.h"
 
 std::shared_ptr<spdlog::logger> logger()
 {
@@ -38,12 +37,6 @@ int main(int argc, char ** argv)
 {
 #ifdef _UNIX
 	setlocale(LC_ALL, "");
-#endif
-
-	ErrHandler.SetSignalHandlers(true);
-
-#ifdef _WIN_ALL
-	SetErrorMode(SEM_NOALIGNMENTFAULTEXCEPT | SEM_FAILCRITICALERRORS | SEM_NOOPENFILEERRORBOX);
 #endif
 
 	if (!environment::init(argc, argv))
