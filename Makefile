@@ -23,7 +23,7 @@ INCS =
 INCLUDE=-Iinclude/ -Iunrar/
 EXEC=$(BDIR)/pkgext
 
-CFLAGS= -g -Wextra -std=c++11 -pthread -O3 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DRAR_SMP -DRARDLL $(INCLUDE)
+CFLAGS= -Wextra -std=c++11 -pthread -O3 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DRAR_SMP -DRARDLL $(INCLUDE)
 LDFLAGS= -lstdc++ -fPIC -pthread
 
 .PHONY: all
