@@ -13,6 +13,8 @@ public:
 	// initialize the environment (call once only).
 	static bool init(int argc, char** argv);
 
+	static void dump_environment();
+
 	// delete the environment instance
 	static void destroy();
 

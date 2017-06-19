@@ -22,8 +22,7 @@ const std::string environment::s_env_defaults[][2] =
 const struct tr_option environment::s_cmdline_options[] =
 {
 	{ 'p', "path", "Torrent path", "p", 1, "<path>" },
-	{ 't', "tvshows-dest", "Destination path for found TV show episodes", "dt", 1, "<path>" },
-	{ 'm', "movies-dest", "Destination path for found movie files", "dm", 1, "<path>" },
+	{ 'o', "option", "Sets an environment option value", "o", 1, "<key=valye>" },
 	{ 0, NULL, NULL, NULL, 0, NULL }
 };
 
@@ -41,19 +40,38 @@ bool environment::init(int argc, char** argv)
 	{
 		switch (c)
 		{
-		case 'p':
-			environment::set("PKGEXT_PATH", optarg);
-			break;
-		case 't':
-			environment::set("PKGEXT_PATH_TV", optarg);
-			break;
-		case 'm':
-			environment::set("PKGEXT_PATH_MOVIES", optarg);
-			break;
+			case 'p':
+				environment::set("PKGEXT_PATH", optarg);
+				break;
+			case 'o':
+			{
+				std::string keyvalue(optarg);
+				if (keyvalue.empty())
+					break;
+
+				size_t pos = keyvalue.find('=');
+				if (pos != std::string::npos)
+				{
+					std::string key(keyvalue.substr(0, pos));
+					std::string value(keyvalue.substr(pos + 1, keyvalue.length() - pos - 1));
+					environment::set(key, value);
+				}
+				break;
+			}
 		}
 	}
 
+	dump_environment();
+
 	return true;
+}
+
+void environment::dump_environment()
+{
+	LOG("--- Environment:");
+	for (mapKeyValue::iterator iter = s_env_map.begin(); iter != s_env_map.end(); iter++)
+		LOG("{}={}",iter->first, iter->second);
+	LOG("--- End");
 }
 
 const char * environment::get_usage(void)
@@ -75,7 +93,7 @@ void environment::read_defaults()
 		std::string value = s_env_defaults[i][1];
 
 		// check if the system environment exists
-		char* env_value = std::getenv(key.c_str());
+		char* env_value = getenv(key.c_str());
 		if (env_value)
 			value = env_value;
 
@@ -86,7 +104,7 @@ void environment::read_defaults()
 			if (value.substr(0, len) == s_env_default_prefix)
 			{
 				std::string env_key = value.substr(len, value.length() - len);
-				env_value = std::getenv(env_key.c_str());
+				env_value = getenv(env_key.c_str());
 				if (env_value)
 					value = env_value;
 				else
