@@ -28,12 +28,15 @@ CFLAGS= -g -O2 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DRAR_SMP -DRARDLL $(I
 LDFLAGS= -lstdc++ -fPIC -pthread
 
 .PHONY: all
-all: $(EXEC)
+all: $(ODIR) $(BDIR) $(EXEC)
+
+$(BDIR) $(ODIR):
+	mkdir -p $@
 
 $(EXEC): $(OBJS)
 	$(LINK) -o $@ $(CFLAGS) $(LDFLAGS) $(addprefix $(ODIR)/,$(OBJS))
 	
-.cpp.o:
+.cpp.o: directories
 	$(CXX) $(CFLAGS) -c $< -o $(ODIR)/$@
 
 #$(ODIR)/main.o: $(SDIR)/main.cpp
