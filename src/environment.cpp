@@ -85,7 +85,7 @@ const char * environment::get_usage(void)
 void environment::read_defaults()
 {
 	size_t count = sizeof(s_env_defaults) / (sizeof(std::string) * 2);
-	for (int i = 0; i < count; i++)
+	for (size_t i = 0; i < count; i++)
 	{
 		std::string key = s_env_defaults[i][0];
 
