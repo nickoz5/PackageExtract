@@ -12,10 +12,8 @@ const std::string environment::s_env_defaults[][2] =
 	{ "PKGEXT_PATH_MOVIES", "" },	// path to destination movie files extracted from package(s)
 #ifdef _WIN32
 	{ "PKGEXT_TEMP", "ENV:TEMP" }	// temp folder used for extracting
-#elif defined(_UNIX)
-	{ "PKGEXT_TEMP", "/var/tmp" }	// full path to unrar executable
 #else
-	{ "PKGEXT_TEMP", "." }
+	{ "PKGEXT_TEMP", "/var/tmp" }	// full path to unrar executable
 #endif // _DEBUG
 };
 
