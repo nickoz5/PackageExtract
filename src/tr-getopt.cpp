@@ -42,7 +42,7 @@ static int
 get_next_line_len( const char * description, int maxlen )
 {
     int end;
-    int len = strlen( description );
+    size_t len = strlen( description );
 
     if( len < maxlen )
         return len;

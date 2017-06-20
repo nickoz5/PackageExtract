@@ -6,16 +6,6 @@
 #include "artefact.h"
 #include "rar.hpp"
 
-//#ifndef _WIN32
-//#include <unistd.h>
-//#include <sys/time.h>
-//#include <dirent.h>
-//#include <sys/param.h>
-//#include <stdlib.h>
-//#endif
-//
-//#include <sys/types.h>
-//#include <sys/stat.h>
 
 
 const char * package::s_video_files_ext[] = {
@@ -40,14 +30,6 @@ bool package::process()
 	umask(000);
 #endif //WIN32
 
-	//// check destination folders exist..
-	//if (access(m_szTVTargetFolder, 0x00) == -1 ||
-	//	stat(m_szMovieTargetFolder, &st) == -1)
-	//{
-	//	LOG("Error: Please set EXTRACTOR_TV_DEST and EXTRACTOR_MOVIE_DEST environment variables.");
-	//	return -1;
-	//}
-
 	std::string source = environment::get("PKGEXT_PATH");
 	scan_directory(source);
 
@@ -58,12 +40,12 @@ void package::scan_directory(const std::string& sourcepath)
 {
 	find_files finder;
 
-	LOG("Scanning source path \"{}\"", sourcepath.c_str());
+	LOG("Scanning source path \"{}\"", sourcepath);
 
 	// find video files..
 	if (!finder.find_first(sourcepath))
 	{
-		LOG("Error: Unable to open source path \"{}\"", sourcepath.c_str());
+		LOG_ERROR("Unable to open source path \"{}\"", sourcepath);
 		return;
 	}
 
@@ -96,7 +78,7 @@ void package::process_archive(const std::string& filepath)
 	{
 		if (!fileio(destpath).mkdir())
 		{
-			LOG("Error: Unable to create torrent temp folder for extracting \"{}\"", destpath.c_str());
+			LOG_ERROR("Unable to create torrent temp folder for extracting \"{}\"", destpath);
 			return;
 		}
 	}
@@ -146,8 +128,8 @@ bool package::process_payload(const std::string& filepath)
 		return false;
 
 	LOG("Found artefact:");
-	LOG("  Type:    {}", this_artefact.get_type_string().c_str());
-	LOG("  Title:   {}", this_artefact.get_title().c_str());
+	LOG("  Type:    {}", this_artefact.get_type_string());
+	LOG("  Title:   {}", this_artefact.get_title());
 	LOG("  Season:  {}", this_artefact.get_season());
 	LOG("  Episode: {}", this_artefact.get_episode());
 
@@ -157,7 +139,7 @@ bool package::process_payload(const std::string& filepath)
 
 	destfilepath += fileio(filepath).get_filename();
 
-	LOG("Deploying artefact \"{}\" to \"{}\"", filepath.c_str(), destfilepath.c_str());
+	LOG("Deploying artefact \"{}\" to \"{}\"", filepath, destfilepath);
 
 	// make sure target file does not exist..
 	if (fileio(destfilepath).exists())
@@ -165,14 +147,14 @@ bool package::process_payload(const std::string& filepath)
 		// file exists..
 		if (fileio(destfilepath).remove() == -1)
 		{
-			LOG("Error: Unable to delete existing target");
+			LOG_ERROR("Unable to delete existing target");
 			return false;
 		}
 	}
 
 	if (::rename(filepath.c_str(), destfilepath.c_str()) == -1)
 	{
-		LOG("Error: Deployment failed");
+		LOG_ERROR("Deployment failed \"{}\"", filepath);
 
 		fileio(destfilepath).remove();
 		return false;
@@ -187,7 +169,7 @@ int package::extract_archive(const std::string& filepath, const std::string& des
 {
 	int nErrorCode = 0;
 
-	LOG("Extracting \"{}\" to \"{}\"", filepath.c_str(), destpath.c_str());
+	LOG("Extracting \"{}\" to \"{}\"", filepath, destpath);
 	
 	char* argv[] = { "unrar", "e", "-o+", "-inul", (char*)filepath.c_str(), (char*)destpath.c_str(), NULL };
 	int argc = sizeof(argv) / sizeof(char*) - 1;
@@ -224,21 +206,21 @@ int package::extract_archive(const std::string& filepath, const std::string& des
 	catch (RAR_EXIT ErrCode)
 	{
 		nErrorCode = ErrCode;
-		LOG("Extraction of \"{}\" failed - error code {}", filepath.c_str(), ErrCode);
+		LOG("Extraction of \"{}\" failed - error code {}", filepath, ErrCode);
 	}
 	catch (std::bad_alloc&)
 	{
-		LOG("Extraction of \"{}\" failed - out of memory", filepath.c_str());
+		LOG("Extraction of \"{}\" failed - out of memory", filepath);
 		nErrorCode = RARX_MEMORY;
 	}
 	catch (...)
 	{
-		LOG("Extraction of \"{}\" failed", filepath.c_str());
+		LOG("Extraction of \"{}\" failed", filepath);
 		nErrorCode = RARX_FATAL;
 	}
 
 	delete Cmd;
 
-	LOG("Extraction of \"{}\" completed", filepath.c_str());
+	LOG("Extraction of \"{}\" completed", filepath);
 	return nErrorCode;
 }

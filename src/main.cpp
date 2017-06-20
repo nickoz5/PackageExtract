@@ -2,6 +2,7 @@
 #include "package.h"
 #include "environment.h"
 #include "spdlog/spdlog.h"
+#include "test.h"
 
 std::shared_ptr<spdlog::logger> logger()
 {
@@ -46,6 +47,14 @@ int main(int argc, char ** argv)
 	init_logger();
 
 	environment::dump_environment();
+
+	// run tests if requested..
+	if (environment::get("TEST") == "ALL")
+	{
+		if (!test_pkgext::run())
+			return -1;
+		return 0;
+	}
 
 	package* a_package = new package();
 

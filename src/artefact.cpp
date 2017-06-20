@@ -21,6 +21,11 @@ const std::string artefact::s_quality_tags[] =
 artefact::artefact(const std::string& filepath)
 {
 	m_filepath = filepath;
+	clear();
+}
+
+void artefact::clear()
+{
 	m_type = TYPE_UNKNOWN;
 	m_episode_no = 0;
 	m_season_no = 0;
@@ -30,20 +35,20 @@ artefact::artefact(const std::string& filepath)
 bool artefact::parse()
 {
 	// find show name
-	std::string title;
-	std::string title_word;
-
+	std::string title, title_word;
 	std::string filename = to_lower(fileio(m_filepath).get_filename());
-	
+
 	if (!is_valid_artefact(filename))
 		return false;
+	
+	clear();
 
 	// is TV show..
-	for (size_t i = 0; i < filename.length(); i++)
+	for (size_t pos = 0; pos < filename.length(); pos++)
 	{
-		char ch = filename[i];
+		char ch = filename[pos];
 
-		if (ch == '.' || ch == ' ' || ch == '_' || i == filename.length() - 1)
+		if (ch == '.' || ch == ' ' || ch == '_' || pos == filename.length() - 1)
 		{
 			// process this word..
 				
@@ -52,7 +57,7 @@ bool artefact::parse()
 				break;
 
 			// check for season/episode id
-			if (find_seasonep_id(title_word, i))
+			if (find_seasonep_id(title_word, pos))
 			{
 				m_type = TYPE_SERIES;
 				break;
@@ -100,7 +105,7 @@ bool artefact::find_movieyear_id(const std::string& title_word)
 			is_number(title_word[3]))
 		{
 			int iYear = atoi(title_word.c_str());
-			if (iYear > 1970 && iYear < 2020) {
+			if (iYear > 1900 && iYear < 2099) {
 				// found movie year
 				m_year = iYear;
 				return true;
@@ -177,8 +182,7 @@ bool artefact::find_seasonep_id(const std::string& title_word, size_t pos)
 				szDate[4] >= '0' && szDate[4] <= '9' && szDate[5] >= '0' && szDate[5] <= '9')
 			{
 				// found season/episode number
-				m_season_no = -1;
-				m_episode_no = -1;
+				m_year = atoi(title_word.substr(0, 4).c_str());
 				return true;
 			}
 		}
@@ -239,7 +243,7 @@ bool artefact::get_series_path(std::string& destpath)
 	ospath << environment::get("PKGEXT_PATH_TV");
 	if (!fileio(ospath.str()).exists())
 	{
-		LOG("Error: destination unavailable \"%s\"", ospath.str());
+		LOG_ERROR("Destination unavailable \"%s\"", ospath.str());
 		return false;
 	}
 
@@ -251,7 +255,7 @@ bool artefact::get_series_path(std::string& destpath)
 	{
 		if (!fileio(ospath.str()).mkdir())
 		{
-			LOG("Error: unable to create title folder \"%s\"", ospath.str());
+			LOG_ERROR("Unable to create title folder \"%s\"", ospath.str());
 			return false;
 		}
 	}
@@ -265,7 +269,7 @@ bool artefact::get_series_path(std::string& destpath)
 		{
 			if (!fileio(ospath.str()).mkdir())
 			{
-				LOG("Error: unable to create title folder \"%s\"", ospath.str());
+				LOG_ERROR("Unable to create title folder \"%s\"", ospath.str());
 				return false;
 			}
 		}
@@ -283,7 +287,7 @@ bool artefact::get_movies_path(std::string& destpath)
 	ospath << environment::get("PKGEXT_PATH_TV");
 	if (!fileio(ospath.str()).exists())
 	{
-		LOG("Error: destination unavailable \"%s\"", ospath.str());
+		LOG_ERROR("Destination unavailable \"%s\"", ospath.str());
 		return false;
 	}
 

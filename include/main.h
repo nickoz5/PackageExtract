@@ -39,6 +39,7 @@
 
 extern std::shared_ptr<spdlog::logger> logger();
 #define LOG(...) if (logger()) logger()->info(__VA_ARGS__);
+#define LOG_ERROR(...) if (logger()) logger()->error(__VA_ARGS__);
 
 std::string to_title_case(const std::string& string);
 std::string to_lower(const std::string& string);

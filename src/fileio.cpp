@@ -96,7 +96,7 @@ int fileio::remove()
 		{
 			if (::remove(filepath.c_str()) == -1)
 			{
-				LOG("Error: unable to remove \"%s\"", filepath.c_str());
+				LOG_ERROR("Unable to remove \"%s\"", filepath);
 				return -1;
 			}
 		}
