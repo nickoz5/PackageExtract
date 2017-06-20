@@ -5,6 +5,8 @@ class artefact
 public:
 	artefact(const std::string& filepath);
 
+	void clear();
+
 public:
 	int get_year() const { return m_year; }
 	int get_season() const { return m_season_no; }

@@ -192,6 +192,9 @@
     <ClCompile Include="src\tr-getopt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\tr-getopt.h">
@@ -409,6 +412,9 @@
     </ClInclude>
     <ClInclude Include="unrar\isnt.hpp">
       <Filter>Unrar\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\test.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

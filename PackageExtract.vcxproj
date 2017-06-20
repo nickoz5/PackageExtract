@@ -172,6 +172,7 @@
     <ClCompile Include="src\filefinder.cpp" />
     <ClCompile Include="src\artefact.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\test.cpp" />
     <ClCompile Include="src\tr-getopt.cpp" />
     <ClCompile Include="unrar\archive.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -378,6 +379,7 @@
     <ClInclude Include="include\filefinder.h" />
     <ClInclude Include="include\artefact.h" />
     <ClInclude Include="include\main.h" />
+    <ClInclude Include="include\test.h" />
     <ClInclude Include="include\tr-getopt.h" />
     <ClInclude Include="include\environment.h" />
     <ClInclude Include="include\package.h" />
