@@ -1,5 +1,7 @@
 #pragma once
 
+#include "artefact.h"
+
 class test_exception : public std::exception
 {
 public:
@@ -26,5 +28,7 @@ public:
 private:
 	static void test_series();
 	static void test_movies();
+
+	static void expect(const std::string& filename, const std::string& title, artefact::TypeEnum etype, int season, int ep, int year);
 };
 
