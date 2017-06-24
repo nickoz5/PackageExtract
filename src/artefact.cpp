@@ -5,16 +5,16 @@
 
 #include <sstream>
 
+// identifying tags
+const std::string artefact::s_source_tv_tags[] = { "hdtv", "ahdtv", "pdtv", "hr.pdtv" };
+const std::string artefact::s_source_disc_tags[] = { "bluray", "bdrip", "blu-ray", "dvdrip" };
+const std::string artefact::s_source_web_tags[] = { "webscr", "web", "web-dl" };
+const std::string artefact::s_quality_tags[] = { "720p", "1080p", "hdtv", "limited", "webscr", "proper" };
 
 const std::string artefact::s_packagetype_tags[] =
 {
 	"hdtv", "web-dl", "pdtv", "dsr", "web", "webrip", "bluray",
 	"bdrip", "dts", "blu-ray", "webscr", "dvdrip", "web-dl"
-};
-
-const std::string artefact::s_quality_tags[] =
-{
-	"720p", "1080p", "hdtv", "limited", "webscr", "proper"
 };
 
 
@@ -30,90 +30,112 @@ void artefact::clear()
 	m_episode_no = 0;
 	m_season_no = 0;
 	m_year = 0;
+	m_month = 0;
+	m_day = 0;
 }
 
 bool artefact::parse()
 {
 	// find show name
-	std::string title, title_word;
 	std::string filename = to_lower(fileio(m_filepath).get_filename());
 
 	if (!is_valid_artefact(filename))
 		return false;
 	
 	clear();
-
-	// is TV show..
-	for (size_t pos = 0; pos < filename.length(); pos++)
-	{
-		char ch = filename[pos];
-
-		if (ch == '.' || ch == ' ' || ch == '_' || pos == filename.length() - 1)
-		{
-			// process this word..
-				
-			// look for tags that indicate the title has ended.
-			if (is_quality_tag(title_word))
-				break;
-
-			// check for season/episode id
-			if (find_seasonep_id(title_word, pos))
-			{
-				m_type = TYPE_SERIES;
-				break;
-			}
-
-			// check for a movie year id
-			if (find_movieyear_id(title_word))
-			{
-				m_type = TYPE_MOVIE;
-				break;
-			}
-
-			// nothing special, assume its part of the title.
-			// add this word to the title string.
-			if (!title.empty()) title += " ";
-			title += title_word;
-
-			// start the next word..
-			title_word.clear();
-
-			// skip '.' char
-			continue;
-		}
-
-		title_word += ch;
-	}
-
-	if (title.empty() || m_type == TYPE_UNKNOWN)
-	{
-		return false;
-	}
-
-	m_title = to_title_case(title);
 	
-	return true;
+	// try to extract series info
+	if (find_series_info())
+	{
+		if ((m_season_no > 0 && m_episode_no > 0) || (m_month > 0 && m_day > 0) ||
+			find_source_tv_tag(filename))
+		{
+			m_type = TYPE_SERIES;
+			return true;
+		}
+	}
+
+	if (find_movie_info())
+	{
+		m_type = TYPE_MOVIE;
+		return true;
+	}
+	
+	return false;
 }
 
-bool artefact::find_movieyear_id(const std::string& title_word)
+bool artefact::find_source_disc_tag(std::string title)
 {
-	if (title_word.length() == 4)
+	for (int i = 0; i < sizeof(s_source_disc_tags) / sizeof(std::string); i++)
 	{
-		if (is_number(title_word[0]) &&
-			is_number(title_word[1]) &&
-			is_number(title_word[2]) &&
-			is_number(title_word[3]))
+		if (title.find(s_source_disc_tags[i], 0) != std::string::npos)
+			return true;
+	}
+	return false;
+}
+
+bool artefact::find_source_web_tag(std::string title)
+{
+	for (int i = 0; i < sizeof(s_source_web_tags) / sizeof(std::string); i++)
+	{
+		if (title.find(s_source_web_tags[i], 0) != std::string::npos)
+			return true;
+	}
+	return false;
+}
+
+bool artefact::find_source_tv_tag(std::string title)
+{
+	for (int i = 0; i < sizeof(s_source_tv_tags) / sizeof(std::string); i++)
+	{
+		if (title.find(s_source_tv_tags[i], 0) != std::string::npos)
+			return true;
+	}
+	return false;
+}
+
+size_t artefact::find_year_pos(int& year, size_t offset)
+{
+	std::string filename = to_lower(fileio(m_filepath).get_filename());
+	std::string current_word;
+	bool found = false;
+
+	for (size_t pos = offset; pos < filename.length(); pos++)
+	{
+		char ch = filename[pos];
+		if (ch == '.' || ch == ' ' || ch == '_' || pos == filename.length() - 1)
 		{
-			int iYear = atoi(title_word.c_str());
-			if (iYear > 1900 && iYear < 2099) {
-				// found movie year
-				m_year = iYear;
-				return true;
+			if (current_word.length() == 4)
+			{
+				if (is_number(current_word[0]) && is_number(current_word[1]) &&
+					is_number(current_word[2]) && is_number(current_word[3]))
+				{
+					int value = atoi(current_word.c_str());
+					if (value > 1900 && value < 2099)
+					{
+						// found movie year
+						year = value;
+						found = true;
+
+						size_t pos_n = find_year_pos(value, pos);
+						if (pos_n > 0)
+						{
+							year = value;
+							return pos_n;
+						}
+
+						return pos - 4;
+					}
+				}
 			}
+
+			current_word.clear();
 		}
+		else
+			current_word += ch;
 	}
 
-	return false;
+	return 0;
 }
 
 bool artefact::is_number(const char c)
@@ -121,7 +143,7 @@ bool artefact::is_number(const char c)
 	return c >= '0' && c <= '9';
 }
 
-bool artefact::find_seasonep_id(const std::string& title_word, size_t pos)
+bool artefact::is_seasonep_id(const std::string& title_word, size_t pos)
 {
 	std::string filename = fileio(m_filepath).get_filename();
 
@@ -183,6 +205,10 @@ bool artefact::find_seasonep_id(const std::string& title_word, size_t pos)
 			{
 				// found season/episode number
 				m_year = atoi(title_word.substr(0, 4).c_str());
+
+				szDate[3] = szDate[6] = '\0';
+				m_month = atoi(szDate + 1);
+				m_day = atoi(szDate + 4);
 				return true;
 			}
 		}
@@ -213,9 +239,7 @@ bool artefact::is_valid_artefact(const std::string& name)
 	// find known package tags
 	for (size_t i = 0; i < sizeof(s_packagetype_tags) / sizeof(std::string); i++)
 	{
-		std::basic_string <char>::size_type pos;
-		pos = name.find(s_packagetype_tags[i]);
-		if (pos != std::string::npos)
+		if (name.find(s_packagetype_tags[i]) != std::string::npos)
 			return true;
 	}
 	return false;
@@ -225,9 +249,7 @@ bool artefact::is_quality_tag(const std::string& word)
 {
 	for (size_t i = 0; i < sizeof(s_quality_tags) / sizeof(std::string); i++)
 	{
-		std::basic_string <char>::size_type pos;
-		pos = word.find(s_quality_tags[i]);
-		if (pos != std::string::npos)
+		if (word.find(s_quality_tags[i]) != std::string::npos)
 			return true;
 	}
 	return false;
@@ -295,4 +317,90 @@ bool artefact::get_movies_path(std::string& destpath)
 		ospath << fileio::s_dir_sep;
 
 	return true;
+}
+
+bool artefact::find_series_info()
+{
+	std::string filename = to_lower(fileio(m_filepath).get_filename());
+
+	bool found = false;
+	size_t pos = 0;
+	std::string current_word;
+
+	for (pos = 0; pos < filename.length(); pos++)
+	{
+		char ch = filename[pos];
+		if (ch == '.' || ch == ' ' || ch == '_' || pos == filename.length() - 1)
+		{
+			// replace with space char
+			filename[pos] = ' ';
+
+			// look for tags that indicate the title has ended.
+			if (is_quality_tag(current_word))
+				break;
+
+			// check for season/episode id
+			if (is_seasonep_id(current_word, pos))
+			{
+				pos -= current_word.length();
+				found = true;
+				break;
+			}
+
+			current_word.clear();
+		}
+		else
+			current_word += ch;
+	}
+
+	// check if a year is in the title somewhere
+	int year = 0;
+	size_t pos_year = find_year_pos(year);
+	if (pos_year > 0)
+	{
+		// include the year in the title unless the episode info is yyyy/mm/dd format 
+		if (m_month == 0 && m_day == 0)
+			pos = pos_year + 5;
+		m_year = year;
+	}
+
+	if (!found && pos_year > 0)
+	{
+		if (find_source_tv_tag(filename) || find_source_web_tag(filename))
+		{
+			// Found a TV series with only a year in the title.
+			// Take the string up to (and including) the year as the title,
+			// and consider the rest to be the episode description.
+			found = true;
+		}
+	}
+
+	if (pos > 1 && pos < filename.length())
+	{
+		m_title = filename.substr(0, pos - 1);
+		m_title = to_title_case(m_title);
+	}
+
+	return found;
+}
+
+bool artefact::find_movie_info()
+{
+	std::string filename = to_lower(fileio(m_filepath).get_filename());
+	int year = 0;
+
+	// check for season/episode id
+	size_t pos = 0;
+	if (pos = find_year_pos(year, 0))
+	{
+		if (find_source_disc_tag(filename) || find_source_web_tag(filename))
+		{
+			m_year = year;
+			m_title = filename.substr(0, pos + 4);
+			m_title = to_title_case(m_title);
+			return true;
+		}
+	}
+
+	return false;
 }
