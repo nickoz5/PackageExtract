@@ -17,8 +17,9 @@ SRCS_UNRAR=strlist.cpp strfn.cpp pathfn.cpp smallfn.cpp global.cpp file.cpp file
 	list.cpp find.cpp unpack.cpp headers.cpp threadpool.cpp rs16.cpp cmddata.cpp ui.cpp \
 	qopen.cpp filestr.cpp scantree.cpp
 
-OBJS = $(SRCS_CORE:.cpp=.o) $(SRCS_UNRAR:.cpp=.o)
-INCS = 
+OBJS=$(SRCS_CORE:.cpp=.o) $(SRCS_UNRAR:.cpp=.o)
+INCS=
+SCRIPTS=fix_downloadstations.sh pkgext_transmission.sh
 
 INCLUDE=-Iinclude/ -Iunrar/
 EXEC=$(BDIR)/pkgext
@@ -41,16 +42,11 @@ $(EXEC): $(OBJS)
 #$(ODIR)/main.o: $(SDIR)/main.cpp
 #	$(CC) $(CFLAGS) -o $@ -c $(SDIR)/main.cpp
 #
-#$(ODIR)/jobinfo.o: $(SDIR)/jobinfo.cpp
-#	$(CC) $(CFLAGS) -o $@ -c $(SDIR)/jobinfo.cpp
-#
-#$(ODIR)/tr-getopt.o: $(SDIR)/tr-getopt.c
-#	$(CC) $(CFLAGS) -o $@ -c $(SDIR)/tr-getopt.c
 
 clean:
 	rm -f $(ODIR)/*.o *~ core $(IDIR)/*~ $(EXEC)
 
-install: $(EXEC)
+install: $(EXEC) $(SCRIPTS)
 	mkdir -p $(DESTDIR)/usr/bin/
 	install $< $(DESTDIR)/usr/bin/
 

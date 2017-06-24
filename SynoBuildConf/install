@@ -1,7 +1,7 @@
 #!/bin/bash
 # Copyright (c) 2000-2015 Synology Inc. All rights reserved.
 
-PKG_NAME="tmux"
+PKG_NAME="pkgext"
 INST_DIR="/tmp/_${PKG_NAME}"
 PKG_DIR="/tmp/_${PKG_NAME}_pkg"
 PKG_DEST="/image/packages"
@@ -17,9 +17,9 @@ PrepareDirs() {
 
 SetupPackageFiles() {
 	DESTDIR="${INST_DIR}" make install
-	#./INFO.sh > INFO
-	#cp INFO "${PKG_DIR}"
-	#cp -r scripts/ "${PKG_DIR}"
+	./INFO.sh > INFO
+	cp INFO "${PKG_DIR}"
+	cp -r scripts/ "${PKG_DIR}"
 }
 
 MakePackage() {
