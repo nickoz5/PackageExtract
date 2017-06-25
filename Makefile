@@ -19,7 +19,7 @@ SRCS_UNRAR=strlist.cpp strfn.cpp pathfn.cpp smallfn.cpp global.cpp file.cpp file
 
 OBJS=$(SRCS_CORE:.cpp=.o) $(SRCS_UNRAR:.cpp=.o)
 INCS=
-SCRIPTS=fix_downloadstations.sh pkgext_transmission.sh
+SCRIPTS=scripts/fix_downloadstations.sh scripts/pkgext_transmission.sh
 
 INCLUDE=-Iinclude/ -Iunrar/
 EXEC=$(BDIR)/pkgext
@@ -46,8 +46,7 @@ $(EXEC): $(OBJS)
 clean:
 	rm -f $(ODIR)/*.o *~ core $(IDIR)/*~ $(EXEC)
 
-$(SCRIPTS):
-install: $(EXEC) $(SCRIPTS)
+install: $(EXEC)
 	mkdir -p $(DESTDIR)/usr/bin/
 	install $< $(DESTDIR)/usr/bin/
 
