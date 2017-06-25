@@ -9,7 +9,7 @@ LINK=$(CXX)
 
 VPATH = src:unrar
 
-SRCS_CORE=main.cpp artefact.cpp environment.cpp filefinder.cpp fileio.cpp package.cpp tr-getopt.cpp
+SRCS_CORE=main.cpp artefact.cpp environment.cpp filefinder.cpp fileio.cpp package.cpp tr-getopt.cpp test.cpp
 SRCS_UNRAR=strlist.cpp strfn.cpp pathfn.cpp smallfn.cpp global.cpp file.cpp filefn.cpp filcreat.cpp \
 	archive.cpp arcread.cpp unicode.cpp system.cpp isnt.cpp crypt.cpp crc.cpp rawread.cpp encname.cpp \
 	resource.cpp match.cpp timefn.cpp rdwrfn.cpp consio.cpp options.cpp errhnd.cpp rarvm.cpp secpassword.cpp \
@@ -46,6 +46,7 @@ $(EXEC): $(OBJS)
 clean:
 	rm -f $(ODIR)/*.o *~ core $(IDIR)/*~ $(EXEC)
 
+$(SCRIPTS):
 install: $(EXEC) $(SCRIPTS)
 	mkdir -p $(DESTDIR)/usr/bin/
 	install $< $(DESTDIR)/usr/bin/

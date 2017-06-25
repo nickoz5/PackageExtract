@@ -6,7 +6,9 @@ PKG_DIR=/tmp/_pkgext_pkg
 rm -rf $PKG_DIR
 mkdir -p $PKG_DIR
 
-### get spk packing functions source /pkgscripts/include/pkg_util.sh
+### get spk packing functions
+source /pkgscripts/include/pkg_util.sh
+
 create_package_tgz()
 {
 	local firewere_version=
@@ -30,8 +32,8 @@ create_spk()
 	local scripts_dir=$PKG_DIR/scripts
 
 	### Copy Package Center scripts to PKG_DIR
-	mkdir -p $scripts_dir
-	cp -av scripts/* $scripts_dir
+	#mkdir -p $scripts_dir
+	#cp -av scripts/* $scripts_dir
 
 	### Copy package icon
 	cp -av PACKAGE_ICON*.PNG $PKG_DIR
