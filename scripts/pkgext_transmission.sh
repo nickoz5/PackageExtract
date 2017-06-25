@@ -1,13 +1,17 @@
 #!/bin/sh
 
-#echo version: $TR_APP_VERSION >>/root/started
-#echo time: $TR_TIME_LOCALTIME >>/root/started
-#echo dir: "$TR_TORRENT_DIR" >>/root/started
-#echo hash: "$TR_TORRENT_HASH" >>/root/started
-#echo id: $TR_TORRENT_ID >> /root/started
-#echo name: $TR_TORRENT_NAME >> /root/started
+INSTALLDIR=/usr/bin/
 
-export PKGEXT_PATH_TV=/volume1/TV Shows
-export PKGEXT_PATH_MOVIES=/volume1/Movies
+## The following additional environment variables are populated by transmission:
+## $TR_APP_VERSION
+## $TR_TIME_LOCALTIME
+## $TR_TORRENT_DIR
+## $TR_TORRENT_HASH
+## $TR_TORRENT_ID
+## $TR_TORRENT_NAME
 
-/opt/sbin/pkgext -p "$TR_TORRENT_DIR/$TR_TORRENT_NAME"
+export PKGEXT_PATH_TV=/path/to/tv/series/library
+export PKGEXT_PATH_MOVIES=/path/to/movies/library
+#export PKGEXT_TEMP=/tmp/pkgext
+
+$(INSTALLDIR)pkgext -p "$TR_TORRENT_DIR/$TR_TORRENT_NAME"
