@@ -18,7 +18,6 @@ SRCS_UNRAR=$(addprefix unrar/,$(_SRCS_UNRAR))
 
 OBJS=$(SRCS_CORE:.cpp=.o) $(SRCS_UNRAR:.cpp=.o)
 INCS=
-SCRIPTS=scripts/fix_downloadstations.sh scripts/pkgext_transmission.sh
 
 INCLUDE=-Iinclude/ -Iunrar/
 EXEC=$(BDIR)/pkgext
@@ -44,4 +43,11 @@ clean:
 install: $(EXEC)
 	mkdir -p $(DESTDIR)/usr/bin/
 	install $< $(DESTDIR)/usr/bin/
+	cp scripts/fix_downloadstation.sh $(DESTDIR)/usr/bin/
+	cp scripts/pkgext_transmission.sh $(DESTDIR)/usr/bin/
+
+uninstall:
+	rm -f $(DESTDIR)/usr/bin/$(EXEC)
+	rm -f $(DESTDIR)/usr/bin/fix_downloadstation.sh
+	rm -f $(DESTDIR)/usr/bin/pkgext_transmission.sh
 
