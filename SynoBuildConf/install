@@ -1,38 +1,57 @@
 #!/bin/bash
-# Copyright (c) 2000-2015 Synology Inc. All rights reserved.
+# Copyright (C) 2000-2016 Synology Inc. All rights reserved.
 
-PKG_NAME="pkgext"
-INST_DIR="/tmp/_${PKG_NAME}"
-PKG_DIR="/tmp/_${PKG_NAME}_pkg"
-PKG_DEST="/image/packages"
+### Use PKG_DIR as working directory.
+PKG_DIR=/tmp/_pkgext_pkg
+rm -rf $PKG_DIR
+mkdir -p $PKG_DIR
 
-PrepareDirs() {
-	for dir in $INST_DIR $PKG_DIR; do
-		rm -rf "$dir"
-	done
-	for dir in $INST_DIR $PKG_DIR $PKG_DEST; do
-		mkdir -p "$dir"
-	done
+### get spk packing functions source /pkgscripts/include/pkg_util.sh
+create_package_tgz()
+{
+	local firewere_version=
+	local package_tgz_dir=/tmp/_package_tgz
+	local binary_dir=$package_tgz_dir/usr/bin
+
+	### clear destination directory
+	rm -r $package_tgz_dir && mkdir -p $package_tgz_dir
+
+	### install needed file into PKG_DIR
+	mkdir -p $binary_dir
+	cp -av minimalPkg $binary_dir
+	make install DESTDIR="$package_tgz_dir"
+
+	### create package.tgz $1: source_dir $2: dest_dir
+	pkg_make_package $package_tgz_dir "${PKG_DIR}"
 }
 
-SetupPackageFiles() {
-	DESTDIR="${INST_DIR}" make install
+create_spk()
+{
+	local scripts_dir=$PKG_DIR/scripts
+
+	### Copy Package Center scripts to PKG_DIR
+	mkdir -p $scripts_dir
+	cp -av scripts/* $scripts_dir
+
+	### Copy package icon
+	cp -av PACKAGE_ICON*.PNG $PKG_DIR
+
+	### Generate INFO file
 	./INFO.sh > INFO
-	cp INFO "${PKG_DIR}"
-	cp -r scripts/ "${PKG_DIR}"
+	cp INFO $PKG_DIR/INFO
+
+	### Create the final spk.
+	# pkg_make_spk <source path> <dest path> <spk file name>
+	# Please put the result spk into /image/packages
+	# spk name functions: pkg_get_spk_name pkg_get_spk_unified_name pkg_get_spk_family_name
+	mkdir -p /image/packages
+	pkg_make_spk ${PKG_DIR} "/image/packages" $(pkg_get_spk_family_name)
 }
 
-MakePackage() {
-	source /pkgscripts/include/pkg_util.sh
-	pkg_make_package $INST_DIR $PKG_DIR
-	pkg_make_spk $PKG_DIR $PKG_DEST
-}
-
-main() {
-	PrepareDirs
-	SetupPackageFiles
-	MakePackage
+main()
+{
+    create_package_tgz
+	create_spk
 }
 
 main "$@"
-
