@@ -1,9 +1,7 @@
 #include /env.mak
+include /env.mak
 
 BDIR=bin
-
-CXX=g++
-LINK=$(CXX)
 
 VPATH = src:unrar
 
@@ -22,8 +20,8 @@ INCS=
 INCLUDE=-Iinclude/ -Iunrar/
 EXEC=$(BDIR)/pkgext
 
-CFLAGS= -Wextra -std=c++11 -pthread -O3 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DRAR_SMP -DRARDLL $(INCLUDE)
-LDFLAGS= -lstdc++ -fPIC -pthread
+_CFLAGS=-Wextra -std=c++11 -pthread -O3 -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -DRAR_SMP -DRARDLL $(INCLUDE)
+_LDFLAGS=-lstdc++ -fPIC -pthread
 
 .PHONY: all
 all: $(BDIR) $(EXEC)
@@ -32,10 +30,10 @@ $(BDIR):
 	mkdir -p $@
 
 $(EXEC): $(OBJS)
-	$(LINK) -o $@ $(CFLAGS) $(LDFLAGS) $(OBJS)
+	$(CC) -o $@ $(CFLAGS) $(_CFLAGS) $(LDFLAGS) $(_LDFLAGS) $(OBJS)
 	
 .cpp.o: directories
-	$(CXX) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) $(_CFLAGS) -c $< -o $@
 
 clean:
 	rm -f $(OBJS) *~ core $(IDIR)/*~ $(EXEC)
