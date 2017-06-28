@@ -69,8 +69,6 @@ void package::scan_directory(const std::string& sourcepath)
 
 void package::process_archive(const std::string& filepath)
 {
-	// if file contains 'sample' - ignore.
-
 	// extract archive file..
 	std::string destpath = fileio(filepath).get_temp_path();
 

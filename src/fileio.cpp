@@ -61,14 +61,9 @@ bool fileio::mkdir()
 
 std::string fileio::get_temp_path()
 {
-	std::string temppath(environment::get("PKGEXT_TEMP"));
-	if (temppath.empty())
-		temppath = get_path();
+	std::string destpath;
 
-	std::string destpath = temppath;
-	if (destpath.at(destpath.length() - 1) != fileio::s_dir_sep)
-		destpath += fileio::s_dir_sep;
-
+	destpath = get_path();
 	destpath += "_extracted";
 
 	return destpath;
