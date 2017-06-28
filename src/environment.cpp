@@ -13,7 +13,6 @@ const std::string environment::s_env_defaults[][2] =
 #ifdef _WIN32
 	{ "PKGEXT_TEMP", "ENV:TEMP" }	// temp folder used for extracting
 #else
-	{ "PKGEXT_LOG", "/var/log/pkgext.log" },
 	{ "PKGEXT_TEMP", "/var/tmp" }	// full path to unrar executable
 #endif // _DEBUG
 };

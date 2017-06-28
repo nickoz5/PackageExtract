@@ -14,23 +14,25 @@ public:
 #endif // _WIN32
 
 	// return just the filename and extension
-	std::string get_filename();
+	std::string get_filename() const;
 	
 	// return the path, including trailing directory seperator
-	std::string get_path();
+	std::string get_path() const;
 
 	// return the extension
-	std::string get_extension();
+	std::string get_extension() const;
+
+	bool is_directory() const;
 
 	// return true if the file/path exists
-	bool exists();
+	bool exists() const;
 
-	bool mkdir();
+	bool mkdir() const;
 
-	int remove();
+	int remove() const;
 
 	// gets a temporary path for use
-	std::string get_temp_path();
+	std::string get_temp_path() const;
 
 private:
 	std::string m_filepath;
