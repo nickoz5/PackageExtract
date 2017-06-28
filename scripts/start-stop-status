@@ -1,15 +1,26 @@
 #!/bin/sh
 # Copyright (C) 2000-2016 Synology Inc. All rights reserved.
 
+PACKAGE_NAME=pkgext
+PACKAGE_DIR="/var/packages/${PACKAGE_NAME}"
+SCRIPTS_DIR="${PACKAGE_DIR}/scripts"
+
+
+start()
+{
+	# fix downloadstation settings
+	${SCRIPTS_DIR}/fix_downloadstation.sh
+}
+
 case $1 in
 	start)
 		### Start this package.
-		pkgext "Start"
+		start
+
 		exit 0
 	;;
 	stop)
 		### Stop this package.
-		pkgext "Stop"
 		exit 0
 	;;
 	status)
