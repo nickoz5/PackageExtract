@@ -19,7 +19,7 @@ void init_logger()
 			spdlog::stdout_color_mt("pkgext");
 		else
 			// Create a daily logger - a new file is created every day on 2:30am
-			spdlog::daily_logger_mt("pkgext", filename, 2, 30);
+			spdlog::basic_logger_mt("pkgext", filename, 2, 30);
 
 		// trigger flush if the log severity is error or higher
 		logger()->flush_on(spdlog::level::err);
