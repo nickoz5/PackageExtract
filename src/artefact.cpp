@@ -306,7 +306,7 @@ bool artefact::get_movies_path(std::string& destpath)
 {
 	std::ostringstream ospath;
 
-	ospath << environment::get("PKGEXT_PATH_TV");
+	ospath << environment::get("PKGEXT_PATH_MOVIES");
 	if (!fileio(ospath.str()).exists())
 	{
 		LOG_ERROR("Destination unavailable \"{}\"", ospath.str());
