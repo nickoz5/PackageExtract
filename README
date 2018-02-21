@@ -21,9 +21,12 @@ For more information see here: https://developer.synology.com/developer-guide/cr
 Installation
 ------------
 
-copy /toolkit/build_env/ds.<build_env>/image/packages/pkgext-<build_env>.spk
+Copy /toolkit/build_env/ds.<build_env>/image/packages/pkgext-<build_env>.spk
+Open the Diskstation WebUI,
+Go to Package Manager and click 'Manual Install'.
+Browse to the spk and click OK.
 
-	
+
 
 Manual Installation instructions
 --------------------------------
