@@ -1,11 +1,32 @@
-Building
---------
+Compiling
+---------
 
-Use the Synology diskstation environment to compile.
+1. Install the Synology diskstation toolkit:
 
+	mkdir -p /toolkit
+	git clone https://github.com/SynologyOpenSource/pkgscripts-ng pkgscripts
 
-Installation instructions
--------------------------
+For more information see here: https://developer.synology.com/developer-guide/create_package/install_toolkit.html
+	
+2. Checkout PackageExtract source code:
+
+	cd /tooltip/source/PackageExtract
+	git clone https://github.com/nickoz5/PackageExtract.git
+
+3. Compile:
+
+	sudo ./PkgCreate.py -p armada370 PackageExtract
+
+	
+Installation
+------------
+
+copy /toolkit/build_env/ds.<build_env>/image/packages/pkgext-<build_env>.spk
+
+	
+
+Manual Installation instructions
+--------------------------------
 
 Open the settings.json configuration file at: /usr/syno/etc/packages/DownloadStation/download/settings.json
 

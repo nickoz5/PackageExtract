@@ -315,6 +315,8 @@ bool artefact::get_movies_path(std::string& destpath)
 
 	if (ospath.str()[ospath.str().length() - 1] != fileio::s_dir_sep)
 		ospath << fileio::s_dir_sep;
+	
+	destpath = ospath.str();
 
 	return true;
 }
