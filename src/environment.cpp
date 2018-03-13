@@ -7,14 +7,14 @@ const std::string environment::s_env_default_prefix = "ENV:";
 // default value (optional) Use the system environment to override.
 const std::string environment::s_env_defaults[][2] =
 {
-	{ "PKGEXT_LOG", "/var/log/pkgext.log"	// path to output log file
-	{ "PKGEXT_PATH", "" },					// path to source packages
-	{ "PKGEXT_PATH_TV", "" },				// path to destination tv show files extracted from package(s)
-	{ "PKGEXT_PATH_MOVIES", "" },			// path to destination movie files extracted from package(s)
+	{ "PKGEXT_LOG", "/var/log/pkgext.log" },	// path to output log file
+	{ "PKGEXT_PATH", "" },						// path to source packages
+	{ "PKGEXT_PATH_TV", "" },					// path to destination tv show files extracted from package(s)
+	{ "PKGEXT_PATH_MOVIES", "" },				// path to destination movie files extracted from package(s)
 #ifdef _WIN32
-	{ "PKGEXT_TEMP", "ENV:TEMP" }			// temp folder used for extracting
+	{ "PKGEXT_TEMP", "ENV:TEMP" }				// temp folder used for extracting
 #else
-	{ "PKGEXT_TEMP", "/var/tmp" }			// full path to unrar executable
+	{ "PKGEXT_TEMP", "/var/tmp" }				// full path to unrar executable
 #endif // _DEBUG
 };
 
