@@ -3,6 +3,15 @@
 #include "environment.h"
 #include "filefinder.h"
 
+#ifndef _WIN32
+#include <sys/stat.h>
+#include <fcntl.h>
+#endif // _WIN32
+
+
+#ifndef BUF_SIZE        /* Allow "cc -D" to override definition */
+#define BUF_SIZE 1024
+#endif
 
 
 fileio::fileio(const std::string& filepath) :
@@ -113,4 +122,68 @@ int fileio::remove() const
 	}
 
 	return true;
+}
+
+bool fileio::copy(const std::string& dest) const
+{
+#ifndef _WIN32
+	int inputFd, outputFd, openFlags;
+	mode_t filePerms;
+	ssize_t numRead;
+	char buf[BUF_SIZE];
+
+	inputFd = open(m_filepath.c_str(), O_RDONLY);
+	if (inputFd == -1)
+	{
+		LOG_ERROR("error opening source file");
+		return false;
+	}
+
+	openFlags = O_CREAT | O_WRONLY | O_TRUNC;
+	filePerms = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP |
+		S_IROTH | S_IWOTH;      /* rw-rw-rw- */
+
+	outputFd = open(dest.c_str(), openFlags, filePerms);
+	if (outputFd == -1)
+	{
+		LOG_ERROR("error opening destination file");
+		return false;
+	}
+
+	/* Transfer data until we encounter end of input or an error */
+
+	while ((numRead = read(inputFd, buf, BUF_SIZE)) > 0)
+	{
+		if (write(outputFd, buf, numRead) != numRead)
+		{
+			LOG_ERROR("error writing buffer to destination - disk full?");
+			return false;
+		}
+	}
+
+	if (numRead == -1)
+	{
+		LOG_ERROR("error reading input file");
+		return false;
+	}
+	if (close(inputFd) == -1)
+	{
+		LOG_ERROR("error closing input handle");
+		return false;
+	}
+	if (close(outputFd) == -1)
+	{
+		LOG_ERROR("error closing output handle");
+		return false;
+	}
+#else
+	::CopyFile(m_filepath.c_str(), dest.c_str(), FALSE);
+#endif //_WIN32
+
+	return true;
+}
+
+bool fileio::move(const std::string& dest) const
+{
+	return ::rename(m_filepath.c_str(), dest.c_str());
 }

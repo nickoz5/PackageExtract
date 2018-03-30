@@ -14,13 +14,13 @@ public:
 
 private:
 	// scan the source path for artefacts
-	void scan_directory(const std::string& source);
+	void scan_directory(const std::string& source, bool usecopy);
 
 	// process the given archive
 	void process_archive(const std::string& filepath);
 
 	// process the given payload
-	bool process_payload(const std::string& filepath);
+	bool process_payload(const std::string& filepath, bool usecopy);
 
 	bool get_series_path(const artefact &this_artefact);
 

@@ -25,7 +25,7 @@ void init_logger()
 		logger()->flush_on(spdlog::level::err);
 
 		// Customize msg format for all messages
-		spdlog::set_pattern("[%H:%M:%S %z] [thread %t] %v");
+		spdlog::set_pattern("[%Y-%d-%m %H:%M:%S %z] [thread %t] %v");
 	}
 	// Exceptions will only be thrown upon failed logger or sink construction (not during logging)
 	catch (const spdlog::spdlog_ex& ex)

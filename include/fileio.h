@@ -34,6 +34,10 @@ public:
 	// gets a temporary path for use
 	std::string get_temp_path() const;
 
+	bool copy(const std::string& dest) const;
+
+	bool move(const std::string& dest) const;
+
 private:
 	std::string m_filepath;
 };

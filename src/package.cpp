@@ -31,12 +31,12 @@ bool package::process()
 #endif //WIN32
 
 	std::string source = environment::get("PKGEXT_PATH");
-	scan_directory(source);
+	scan_directory(source, true);
 
 	return true;
 }
 
-void package::scan_directory(const std::string& sourcepath)
+void package::scan_directory(const std::string& sourcepath, bool usecopy)
 {
 	find_files finder;
 
@@ -55,11 +55,11 @@ void package::scan_directory(const std::string& sourcepath)
 
 		// check if folder;
 		if (finder.is_directory() && !finder.is_dots())
-			scan_directory(filepath);
+			scan_directory(filepath, usecopy);
 		
 		// check if extension is a known video file
 		else if (is_payload(filepath))
-			process_payload(filepath);
+			process_payload(filepath, usecopy);
 
 		// find compressed files..
 		else if (is_archive_file(filepath))
@@ -84,7 +84,7 @@ void package::process_archive(const std::string& filepath)
 	extract_archive(filepath, destpath);
 
 	// find extracted file(s)..
-	scan_directory(destpath);
+	scan_directory(destpath, false);
 
 	fileio(destpath).remove();
 }
@@ -115,7 +115,7 @@ bool package::is_archive_file(const std::string& filename)
 	return false;
 }
 
-bool package::process_payload(const std::string& filepath)
+bool package::process_payload(const std::string& filepath, bool usecopy)
 {
 	// if file contains 'sample' - ignore.
 	if (to_lower(filepath).find("sample") != std::string::npos)
@@ -150,14 +150,25 @@ bool package::process_payload(const std::string& filepath)
 		}
 	}
 
-	if (::rename(filepath.c_str(), destfilepath.c_str()) == -1)
+	int result = -1;
+	
+	if (usecopy)
+	{
+		result = fileio(filepath).copy(destfilepath.c_str());
+	}
+	else
+	{
+		result = fileio(filepath).move(destfilepath.c_str());
+	}
+	
+	if (result == -1)
 	{
 		LOG_ERROR("Deployment failed \"{}\"", filepath);
 
 		fileio(destfilepath).remove();
 		return false;
 	}
-
+	
 	LOG("Deployment completed successfully");
 
 	return true;

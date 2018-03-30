@@ -3,7 +3,7 @@
 source /pkgscripts/include/pkg_util.sh
 
 package="pkgext"
-version="1.2.2"
+version="1.2.3"
 displayname="PackageExtracter"
 maintainer="Nick Hynes (nhynes@outlook.com.au)"
 arch="$(pkg_get_unified_platform)"
